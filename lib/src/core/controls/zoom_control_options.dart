@@ -14,7 +14,17 @@
 
 part of google_maps;
 
-class ZoomControlOptions extends jsw.IsJsProxy {
-  set position(ControlPosition position) => $.position = position;
-  set style(ZoomControlStyle style) => $.style = style;
+abstract class _ZoomControlOptions {
+  ControlPosition position;
+  ZoomControlStyle style;
+}
+
+class ZoomControlOptions extends jsw.TypedProxy implements _ZoomControlOptions {
+  static ZoomControlOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new ZoomControlOptions.fromJsProxy(jsProxy));
+
+  ZoomControlOptions() : super();
+  ZoomControlOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  ControlPosition get position => ControlPosition.find($unsafe.position);
+  ZoomControlStyle get style => ZoomControlStyle.find($unsafe.style);
 }

@@ -14,11 +14,13 @@
 
 part of google_maps;
 
-class MapTypeRegistry extends MVCObject {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new MapTypeRegistry.fromJsProxy(jsProxy);
+abstract class _MapTypeRegistry {
+  void set(String id, MapType mapType);
+}
 
-  MapTypeRegistry() : super.newInstance(maps.MapTypeRegistry);
+class MapTypeRegistry extends MVCObject implements _MapTypeRegistry {
+  static MapTypeRegistry cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MapTypeRegistry.fromJsProxy(jsProxy));
+
+  MapTypeRegistry() : super(maps.MapTypeRegistry);
   MapTypeRegistry.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
-
-  void set(String id, MapType mapType) { $.set(id, mapType); }
 }

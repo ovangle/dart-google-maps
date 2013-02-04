@@ -14,15 +14,22 @@
 
 part of google_maps;
 
-class LatLng extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new LatLng.fromJsProxy(jsProxy);
+abstract class _LatLng {
+  bool equals(LatLng other);
+  // num lat(); // num get lat;
+  // num lng(); // num get lng;
+  String toString();
+  String toUrlValue([num precision]);
+}
 
-  LatLng(num lat, num lng, [bool noWrap]) : super.newInstance(maps.LatLng, [lat, lng, noWrap]);
+class LatLng extends jsw.TypedProxy implements _LatLng {
+  static LatLng cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new LatLng.fromJsProxy(jsProxy));
+  static bool isInstance(js.Proxy jsProxy) => js.instanceof(jsProxy, maps.LatLng);
+
+  LatLng(num lat, num lng, [bool noWrap]) : super(maps.LatLng, [lat, lng, noWrap]);
   LatLng.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  bool equals(LatLng other) => $.equals(other).value;
-  num get lat => $.lat().value;
-  num get lng => $.lng().value;
-  String toString() => $.noSuchMethod(new jsw.ProxyInvocationMirror.method("toString", [])).value;
-  String toUrlValue([num precision]) => $.toUrlValue(precision).value;
+  num get lat => $unsafe.lat();
+  num get lng => $unsafe.lng();
+  @override String toString() => $unsafe.noSuchMethod(new jsw.ProxyInvocationMirror.method("toString", []));
 }

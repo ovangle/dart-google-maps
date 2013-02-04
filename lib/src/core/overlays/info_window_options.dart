@@ -14,22 +14,21 @@
 
 part of google_maps;
 
-class InfoWindowOptions extends jsw.IsJsProxy {
-  set content(Object content) {
-    if (content is String || content is html.Node) {
-      $.content = content;
-    } else {
-      throw new UnsupportedError("Parameter must be of type String or Node");
-    }
-  }
-  bool get disableAutoPan => $.disableAutoPan.value;
-  set disableAutoPan(bool disableAutoPan) => $.disableAutoPan = disableAutoPan;
-  num get maxWidth => $.maxWidth.value;
-  set maxWidth(num maxWidth) => $.maxWidth = maxWidth;
-  Size get pixelOffset => $.pixelOffset.map(Size.INSTANCIATOR).value;
-  set pixelOffset(Size pixelOffset) => $.pixelOffset = pixelOffset;
-  LatLng get position => $.position.map(LatLng.INSTANCIATOR).value;
-  set position(LatLng position) => $.position = position;
-  num get zIndex => $.zIndex.value;
-  set zIndex(num zIndex) => $.zIndex = zIndex;
+abstract class _InfoWindowOptions {
+  dynamic/*string|Node*/ content;
+  bool disableAutoPan;
+  num maxWidth;
+  Size pixelOffset;
+  LatLng position;
+  num zIndex;
+}
+
+class InfoWindowOptions extends jsw.TypedProxy implements _InfoWindowOptions {
+  static InfoWindowOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new InfoWindowOptions.fromJsProxy(jsProxy));
+
+  InfoWindowOptions() : super();
+  InfoWindowOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override Size get pixelOffset => Size.cast($unsafe.pixelOffset);
+  @override LatLng get position => LatLng.cast($unsafe.position);
 }

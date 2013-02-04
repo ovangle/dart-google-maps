@@ -14,10 +14,17 @@
 
 part of google_maps;
 
-class BicyclingLayer extends MVCObject {
-  BicyclingLayer() : super.newInstance(maps.BicyclingLayer);
+abstract class _BicyclingLayer {
+  // GMap getMap(); // GMap get map;
+  // void setMap(GMap map); // set map(GMap map);
+}
+
+class BicyclingLayer extends MVCObject implements _BicyclingLayer {
+  static BicyclingLayer cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new BicyclingLayer.fromJsProxy(jsProxy));
+
+  BicyclingLayer() : super(maps.BicyclingLayer);
   BicyclingLayer.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  set map(GMap map) => $.setMap(map);
+  GMap get map => GMap.cast($unsafe.getMap());
+  set map(GMap map) => $unsafe.setMap(map);
 }

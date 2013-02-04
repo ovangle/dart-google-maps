@@ -14,16 +14,15 @@
 
 part of google_maps;
 
-class StreetViewPov extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new StreetViewPov.fromJsProxy(jsProxy);
+abstract class _StreetViewPov {
+  num heading;
+  num pitch;
+  num zoom;
+}
+
+class StreetViewPov extends jsw.TypedProxy implements _StreetViewPov {
+  static StreetViewPov cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StreetViewPov.fromJsProxy(jsProxy));
 
   StreetViewPov() : super();
   StreetViewPov.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
-
-  num get heading => $.heading.value;
-  set heading(num heading) => $.heading = heading;
-  num get pitch => $.pitch.value;
-  set pitch(num pitch) => $.pitch = pitch;
-  num get zoom => $.zoom.value;
-  set zoom(num zoom) => $.zoom = zoom;
 }

@@ -14,25 +14,32 @@
 
 part of google_maps;
 
-class OverlayView extends MVCObject {
-  OverlayView() : super.newInstance(maps.OverlayView);
+abstract class _OverlayView {
+  void draw();
+  @jsw.dartified GMap getMap();
+  @jsw.dartified MapPanes getPanes();
+  @jsw.dartified MapCanvasProjection getProjection();
+  void onAdd();
+  void onRemove();
+  @jsw.dartified void setMap(dynamic/*Map|StreetViewPanorama*/ map);
+}
+
+class OverlayView extends MVCObject implements _OverlayView {
+  static OverlayView cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new OverlayView.fromJsProxy(jsProxy));
+
+  OverlayView() : super(maps.OverlayView);
   OverlayView.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  void draw() { $.draw(); }
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  MapPanes get panes => $.getPanes().map(MapPanes.INSTANCIATOR).value;
-  MapCanvasProjection get projection => $.getProjection().map(MapCanvasProjection.INSTANCIATOR).value;
-  void onAdd() { $.onAdd(); }
-  void onRemove() { $.onRemove(); }
-  set map(Object map) {
-    if (map == null || map is GMap || map is StreetViewPanorama) {
-      $.setMap(map);
-    } else {
-      throw new UnsupportedError("Parameter must be of type GMap or StreetViewPanorama");
-    }
-  }
+  @override GMap getMap() => GMap.cast($unsafe.getMap());
+  @override MapPanes getPanes() => MapPanes.cast($unsafe.getPanes());
+  @override MapCanvasProjection getProjection() => MapCanvasProjection.cast($unsafe.getProjection());
 
-  void set_onAdd(onAdd()) { $.onAdd = new jsw.Callback.many(onAdd); }
-  void set_onRemove(onRemove()) { $.onRemove = new jsw.Callback.many(onRemove); }
-  void set_draw(draw()) { $.draw = new jsw.Callback.many(draw); }
+  GMap get map => getMap();
+  MapPanes get panes => getPanes();
+  MapCanvasProjection get projection => getProjection();
+  set map(dynamic/*Map|StreetViewPanorama*/ map) => setMap(map);
+
+  void set_onAdd(onAdd()) { $unsafe.onAdd = new jsw.Callback.many(onAdd); }
+  void set_onRemove(onRemove()) { $unsafe.onRemove = new jsw.Callback.many(onRemove); }
+  void set_draw(draw()) { $unsafe.draw = new jsw.Callback.many(draw); }
 }

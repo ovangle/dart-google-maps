@@ -14,23 +14,19 @@
 
 part of google_maps;
 
-class MapPanes extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new MapPanes.fromJsProxy(jsProxy);
+abstract class _MapPanes {
+  html.Node floatPane;
+  html.Node floatShadow;
+  html.Node mapPane;
+  html.Node overlayImage;
+  html.Node overlayLayer;
+  html.Node overlayMouseTarget;
+  html.Node overlayShadow;
+}
 
+class MapPanes extends jsw.TypedProxy implements _MapPanes {
+  static MapPanes cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MapPanes.fromJsProxy(jsProxy));
+
+  MapPanes() : super();
   MapPanes.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
-
-  html.Node get floatPane => $.floatPane.value;
-  set floatPane(html.Node floatPane) => $.floatPane = floatPane;
-  html.Node get floatShadow => $.floatShadow.value;
-  set floatShadow(html.Node floatShadow) => $.floatShadow = floatShadow;
-  html.Node get mapPane => $.mapPane.value;
-  set mapPane(html.Node mapPane) => $.mapPane = mapPane;
-  html.Node get overlayImage => $.overlayImage.value;
-  set overlayImage(html.Node overlayImage) => $.overlayImage = overlayImage;
-  html.Node get overlayLayer => $.overlayLayer.value;
-  set overlayLayer(html.Node overlayLayer) => $.overlayLayer = overlayLayer;
-  html.Node get overlayMouseTarget => $.overlayMouseTarget.value;
-  set overlayMouseTarget(html.Node overlayMouseTarget) => $.overlayMouseTarget = overlayMouseTarget;
-  html.Node get overlayShadow => $.overlayShadow.value;
-  set overlayShadow(html.Node overlayShadow) => $.overlayShadow = overlayShadow;
 }

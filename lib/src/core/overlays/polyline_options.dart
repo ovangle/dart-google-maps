@@ -14,22 +14,35 @@
 
 part of google_maps;
 
-class PolylineOptions extends jsw.IsJsProxy {
-  set clickable(bool clickable) => $.clickable = clickable;
-  set editable(bool editable) => $.editable = editable;
-  set geodesic(bool geodesic) => $.geodesic = geodesic;
-  set icons(List<IconSequence> icons) => $.icons = icons;
-  set map(GMap map) => $.map = map;
-  set path(Object path) {
-    if (path is MVCArray<LatLng> || path is List<LatLng>) {
-      $.path = path;
+abstract class _PolylineOptions {
+  bool clickable;
+  bool editable;
+  bool geodesic;
+  List<IconSequence> icons;
+  GMap map;
+  dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ path;
+  String strokeColor;
+  num strokeOpacity;
+  num strokeWeight;
+  bool visible;
+  num zIndex;
+}
+
+class PolylineOptions extends jsw.TypedProxy implements _PolylineOptions {
+  static PolylineOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new PolylineOptions.fromJsProxy(jsProxy));
+
+  PolylineOptions() : super();
+  PolylineOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override GMap get map => GMap.cast($unsafe.map);
+  @override dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ get path {
+    final result = $unsafe.path;
+    if (MVCArray.isInstance(result)) {
+      return MVCArray.cast(result, (e) => LatLng.cast(e));
     } else {
-      throw new UnsupportedError("Parameter must be of type MVCArray<LatLng> or List<LatLng>");
+      return jsw.JsArray.cast(result, (e) => LatLng.cast(e));
     }
   }
-  set strokeColor(String strokeColor) => $.strokeColor = strokeColor;
-  set strokeOpacity(num strokeOpacity) => $.strokeOpacity = strokeOpacity;
-  set strokeWeight(num strokeWeight) => $.strokeWeight = strokeWeight;
-  set visible(bool visible) => $.visible = visible;
-  set zIndex(num zIndex) => $.zIndex = zIndex;
+  @override set path(dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ path) => $unsafe.path = path is List ? jsw.JsArray.jsify(path) : path;
+
 }

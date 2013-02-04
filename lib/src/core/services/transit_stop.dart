@@ -14,12 +14,16 @@
 
 part of google_maps;
 
-class TransitStop extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new TransitStop.fromJsProxy(jsProxy);
+abstract class _TransitStop {
+  LatLng location;
+  String name;
+}
+
+class TransitStop extends jsw.TypedProxy implements _TransitStop {
+  static TransitStop cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new TransitStop.fromJsProxy(jsProxy));
 
   TransitStop() : super();
   TransitStop.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  LatLng get location => $.location.map(LatLng.INSTANCIATOR).value;
-  String get name => $.name.value;
+  @override LatLng get location => LatLng.cast($unsafe.location);
 }

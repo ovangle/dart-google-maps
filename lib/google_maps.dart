@@ -16,9 +16,9 @@ library google_maps;
 
 import 'dart:html' as html;
 import 'package:js/js.dart' as js;
+import 'package:js_wrap/js_wrap.dart' as jsw;
 import 'package:meta/meta.dart';
-import 'optional.dart';
-import 'js_wrap.dart' as jsw;
+import 'utils.dart';
 
 part 'src/core/map/map.dart';
 part 'src/core/map/map_options.dart';
@@ -112,7 +112,6 @@ part 'src/core/map_types/map_type.dart';
 part 'src/core/map_types/map_type_registry.dart';
 part 'src/core/map_types/projection.dart';
 part 'src/core/map_types/image_map_type.dart';
-part 'src/core/map_types/image_map_type_events.dart';
 part 'src/core/map_types/image_map_type_options.dart';
 part 'src/core/map_types/styled_map_type.dart';
 part 'src/core/map_types/styled_map_type_options.dart';
@@ -145,6 +144,7 @@ part 'src/core/layers/transit_layer.dart';
 part 'src/core/street_view/street_view_panorama.dart';
 part 'src/core/street_view/street_view_panorama_options.dart';
 part 'src/core/street_view/street_view_address_control_options.dart';
+part 'src/core/street_view/street_view_link.dart';
 part 'src/core/street_view/street_view_pov.dart';
 part 'src/core/street_view/street_view_panorama_data.dart';
 part 'src/core/street_view/street_view_location.dart';
@@ -164,19 +164,18 @@ part 'src/core/base/size.dart';
 part 'src/core/mvc/mvc_object.dart';
 part 'src/core/mvc/mvc_array.dart';
 
-// utility to get js.Proxy even if out of scope
-dynamic findIn(List elements, Object o) => elements.where((e) => e == o).reduce(null, (previousValue, e) => (previousValue != null ? previousValue : e));
-
 // js.Proxy for "google.maps"
 final maps = js.retain(js.context.google.maps);
 
-class NativeEvent extends jsw.IsJsProxy {
+class NativeEvent extends jsw.TypedProxy {
+  static NativeEvent cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new NativeEvent.fromJsProxy(jsProxy));
+
   NativeEvent() : super();
   NativeEvent.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }
 
 class EventListenerAdder {
-  final jsw.IsJsProxy _instance;
+  final jsw.TypedProxy _instance;
   final String _eventName;
 
   EventListenerAdder(this._instance, this._eventName);
@@ -198,60 +197,60 @@ class MapsEventListenerRegistration {
 }
 
 class NoArgsEventListenerAdder extends EventListenerAdder {
-  NoArgsEventListenerAdder(jsw.IsJsProxy _instance, String _eventName) : super(_instance, _eventName);
+  NoArgsEventListenerAdder(jsw.TypedProxy _instance, String _eventName) : super(_instance, _eventName);
 
   void add(void handler()) => super.add(() => handler());
   MapsEventListenerRegistration addTemporary(void handler()) => super.addTemporary(() => handler());
 }
 
 class NativeEventListenerAdder extends EventListenerAdder {
-  NativeEventListenerAdder(jsw.IsJsProxy _instance, String _eventName) : super(_instance, _eventName);
+  NativeEventListenerAdder(jsw.TypedProxy _instance, String _eventName) : super(_instance, _eventName);
 
-  void add(void handler(MouseEvent e)) { super.add((e) => handler(e.map((e) => new NativeEvent.fromJsProxy(e)).value)); }
-  MapsEventListenerRegistration addTemporary(void handler(NativeEvent e)) => super.addTemporary((e) => handler(e.map((e) => new NativeEvent.fromJsProxy(e)).value));
+  void add(void handler(NativeEvent e)) { super.add((e) => handler(NativeEvent.cast(e))); }
+  MapsEventListenerRegistration addTemporary(void handler(NativeEvent e)) => super.addTemporary((e) => handler(NativeEvent.cast(e)));
 }
 
 class MouseEventListenerAdder extends EventListenerAdder {
-  MouseEventListenerAdder(jsw.IsJsProxy _instance, String _eventName) : super(_instance, _eventName);
+  MouseEventListenerAdder(jsw.TypedProxy _instance, String _eventName) : super(_instance, _eventName);
 
-  void add(void handler(MouseEvent e)) { super.add((e) => handler(e.map((e) => new MouseEvent.fromJsProxy(e)).value)); }
-  MapsEventListenerRegistration addTemporary(void handler(MouseEvent e)) => super.addTemporary((e) => handler(e.map((e) => new MouseEvent.fromJsProxy(e)).value));
+  void add(void handler(MouseEvent e)) { super.add((e) => handler(MouseEvent.cast(e))); }
+  MapsEventListenerRegistration addTemporary(void handler(MouseEvent e)) => super.addTemporary((e) => handler(MouseEvent.cast(e)));
 }
 
 class PolyMouseEventListenerAdder extends EventListenerAdder {
-  PolyMouseEventListenerAdder(jsw.IsJsProxy _instance, String _eventName) : super(_instance, _eventName);
+  PolyMouseEventListenerAdder(jsw.TypedProxy _instance, String _eventName) : super(_instance, _eventName);
 
-  void add(void handler(PolyMouseEvent e)) { super.add((e) => handler(e.map((e) => new PolyMouseEvent.fromJsProxy(e)).value)); }
-  MapsEventListenerRegistration addTemporary(void handler(PolyMouseEvent e)) => super.addTemporary((e) => handler(e.map((e) => new PolyMouseEvent.fromJsProxy(e)).value));
+  void add(void handler(PolyMouseEvent e)) { super.add((e) => handler(PolyMouseEvent.cast(e))); }
+  MapsEventListenerRegistration addTemporary(void handler(PolyMouseEvent e)) => super.addTemporary((e) => handler(PolyMouseEvent.cast(e)));
 }
 
 class FusionTablesMouseEventListenerAdder extends EventListenerAdder {
-  FusionTablesMouseEventListenerAdder(jsw.IsJsProxy _instance, String _eventName) : super(_instance, _eventName);
+  FusionTablesMouseEventListenerAdder(jsw.TypedProxy _instance, String _eventName) : super(_instance, _eventName);
 
-  void add(void handler(FusionTablesMouseEvent e)) { super.add((e) => handler(e.map((e) => new FusionTablesMouseEvent.fromJsProxy(e)).value)); }
-  MapsEventListenerRegistration addTemporary(void handler(FusionTablesMouseEvent e)) => super.addTemporary((e) => handler(e.map((e) => new FusionTablesMouseEvent.fromJsProxy(e)).value));
+  void add(void handler(FusionTablesMouseEvent e)) { super.add((e) => handler(FusionTablesMouseEvent.cast(e))); }
+  MapsEventListenerRegistration addTemporary(void handler(FusionTablesMouseEvent e)) => super.addTemporary((e) => handler(FusionTablesMouseEvent.cast(e)));
 }
 
 class KmlMouseEventListenerAdder extends EventListenerAdder {
-  KmlMouseEventListenerAdder(jsw.IsJsProxy _instance, String _eventName) : super(_instance, _eventName);
+  KmlMouseEventListenerAdder(jsw.TypedProxy _instance, String _eventName) : super(_instance, _eventName);
 
-  void add(void handler(KmlMouseEvent e)) { super.add((e) => handler(e.map((e) => new KmlMouseEvent.fromJsProxy(e)).value)); }
-  MapsEventListenerRegistration addTemporary(void handler(KmlMouseEvent e)) => super.addTemporary((e) => handler(e.map((e) => new KmlMouseEvent.fromJsProxy(e)).value));
+  void add(void handler(KmlMouseEvent e)) { super.add((e) => handler(KmlMouseEvent.cast(e))); }
+  MapsEventListenerRegistration addTemporary(void handler(KmlMouseEvent e)) => super.addTemporary((e) => handler(KmlMouseEvent.cast(e)));
 }
 
 class NumEventListenerAdder extends EventListenerAdder {
-  NumEventListenerAdder(jsw.IsJsProxy _instance, String _eventName) : super(_instance, _eventName);
+  NumEventListenerAdder(jsw.TypedProxy _instance, String _eventName) : super(_instance, _eventName);
 
-  void add(void handler(num number)) { super.add((e) => handler(e.value)); }
-  MapsEventListenerRegistration addTemporary(void handler(num number)) => super.addTemporary((e) => handler(e.value));
+  void add(void handler(num number)) { super.add((e) => handler(e)); }
+  MapsEventListenerRegistration addTemporary(void handler(num number)) => super.addTemporary((e) => handler(e));
 }
 
 class NumAndElementEventListenerAdder<E> extends EventListenerAdder {
-  jsw.Transformater _transform;
+  jsw.Transformer _transform;
 
-  NumAndElementEventListenerAdder(jsw.IsJsProxy _instance, String _eventName, this._transform) : super(_instance, _eventName);
+  NumAndElementEventListenerAdder(jsw.TypedProxy _instance, String _eventName, this._transform) : super(_instance, _eventName);
 
-  void add(void handler(num number, E e)) { super.add((number, e) => handler(number.value, e.map(_transform).value)); }
-  MapsEventListenerRegistration addTemporary(void handler(num number, E e)) => super.addTemporary((number, e) => handler(number.value, e.map(_transform).value));
+  void add(void handler(num number, E e)) { super.add((number, e) => handler(number, jsw.transformIfNotNull(e, _transform))); }
+  MapsEventListenerRegistration addTemporary(void handler(num number, E e)) => super.addTemporary((number, e) => handler(number, jsw.transformIfNotNull(e, _transform)));
 }
 

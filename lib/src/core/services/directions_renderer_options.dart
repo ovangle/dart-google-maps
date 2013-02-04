@@ -14,19 +14,32 @@
 
 part of google_maps;
 
-class DirectionsRendererOptions extends jsw.IsJsProxy {
-  set directions(DirectionsResult directions) => $.directions = directions;
-  set draggable(bool draggable) => $.draggable = draggable;
-  set hideRouteList(bool hideRouteList) => $.hideRouteList = hideRouteList;
-  set infoWindow(InfoWindow infoWindow) => $.infoWindow = infoWindow;
-  set map(GMap map) => $.map = map;
-  set markerOptions(MarkerOptions markerOptions) => $.markerOptions = markerOptions;
-  set panel(html.Node panel) => $.panel = panel;
-  set polylineOptions(PolylineOptions polylineOptions) => $.polylineOptions = polylineOptions;
-  set preserveViewport(bool preserveViewport) => $.preserveViewport = preserveViewport;
-  set routeIndex(num routeIndex) => $.routeIndex = routeIndex;
-  set suppressBicyclingLayer(bool suppressBicyclingLayer) => $.suppressBicyclingLayer = suppressBicyclingLayer;
-  set suppressInfoWindows(bool suppressInfoWindows) => $.suppressInfoWindows = suppressInfoWindows;
-  set suppressMarkers(bool suppressMarkers) => $.suppressMarkers = suppressMarkers;
-  set suppressPolylines(bool suppressPolylines) => $.suppressPolylines = suppressPolylines;
+abstract class _DirectionsRendererOptions {
+  DirectionsResult directions;
+  bool draggable;
+  bool hideRouteList;
+  InfoWindow infoWindow;
+  GMap map;
+  MarkerOptions markerOptions;
+  html.Node panel;
+  PolylineOptions polylineOptions;
+  bool preserveViewport;
+  num routeIndex;
+  bool suppressBicyclingLayer;
+  bool suppressInfoWindows;
+  bool suppressMarkers;
+  bool suppressPolylines;
+}
+
+class DirectionsRendererOptions extends jsw.TypedProxy implements _DirectionsRendererOptions {
+  static DirectionsRendererOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new DirectionsRendererOptions.fromJsProxy(jsProxy));
+
+  DirectionsRendererOptions() : super();
+  DirectionsRendererOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override DirectionsResult get directions => DirectionsResult.cast($unsafe.directions);
+  @override InfoWindow get infoWindow => InfoWindow.cast($unsafe.infoWindow);
+  @override GMap get map => GMap.cast($unsafe.map);
+  @override MarkerOptions get markerOptions => MarkerOptions.cast($unsafe.markerOptions);
+  @override PolylineOptions get polylineOptions => PolylineOptions.cast($unsafe.polylineOptions);
 }

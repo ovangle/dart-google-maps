@@ -14,7 +14,17 @@
 
 part of google_maps;
 
-class PathElevationRequest extends jsw.IsJsProxy {
-  set path(List<LatLng> path) => $.path = path;
-  set samples(num samples) => $.samples = samples;
+abstract class _PathElevationRequest {
+  List<LatLng> path;
+  num samples;
+}
+
+class PathElevationRequest extends jsw.TypedProxy implements _PathElevationRequest {
+  static PathElevationRequest cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new PathElevationRequest.fromJsProxy(jsProxy));
+
+  PathElevationRequest() : super();
+  PathElevationRequest.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override List<LatLng> get path => jsw.JsArray.cast($unsafe.path, LatLng.cast);
+  @override set path(List<LatLng> path) => $unsafe.path = jsw.JsArray.jsify(path);
 }

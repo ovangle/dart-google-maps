@@ -14,10 +14,17 @@
 
 part of google_maps;
 
-class TrafficLayer extends MVCObject {
-  TrafficLayer() : super.newInstance(maps.TrafficLayer);
+abstract class _TrafficLayer {
+  // GMap getMap(); // GMap get map;
+  // setMap(GMap map); // set map(GMap map);
+}
+
+class TrafficLayer extends MVCObject implements _TrafficLayer {
+  static TrafficLayer cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new TrafficLayer.fromJsProxy(jsProxy));
+
+  TrafficLayer() : super(maps.TrafficLayer);
   TrafficLayer.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  set map(GMap map) => $.setMap(map);
+  GMap get map => GMap.cast($unsafe.getMap());
+  set map(GMap map) => $unsafe.setMap(map);
 }

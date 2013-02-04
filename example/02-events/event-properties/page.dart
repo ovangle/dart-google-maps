@@ -1,7 +1,7 @@
 import 'dart:html';
 import 'dart:math';
 import 'package:js/js.dart' as js;
-import 'package:google_maps/js_wrap.dart' as jsw;
+import 'package:js_wrap/js_wrap.dart' as jsw;
 import 'package:google_maps/google_maps.dart';
 
 void main() {
@@ -21,7 +21,9 @@ void main() {
     );
     infowindow.open(map);
 
-    jsw.retainAll([map, myLatLng, infowindow]);
+    jsw.retain(map);
+    jsw.retain(myLatLng);
+    jsw.retain(infowindow);
     map.on.zoomChanged.add(() {
       var zoomLevel = map.zoom;
       map.center = myLatLng;

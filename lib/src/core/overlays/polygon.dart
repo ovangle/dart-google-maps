@@ -14,35 +14,44 @@
 
 part of google_maps;
 
-class Polygon extends MVCObject {
+abstract class _Polygon {
+  @jsw.dartified bool getEditable();
+  @jsw.dartified GMap getMap();
+  @jsw.dartified MVCArray<LatLng> getPath();
+  @jsw.dartified MVCArray<MVCArray<LatLng>> getPaths();
+  @jsw.dartified bool getVisible();
+  @jsw.dartified void setEditable(bool editable);
+  @jsw.dartified void setMap(GMap map);
+  @jsw.dartified void setOptions(PolygonOptions options);
+  @jsw.dartified void setPath(dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ path);
+  @jsw.dartified void setPaths(dynamic/*MVCArray.<MVCArray.<LatLng>>|MVCArray.<LatLng>|Array.<Array.<LatLng>>|Array.<LatLng>*/ paths);
+  @jsw.dartified void setVisible(bool visible);
+}
+
+class Polygon extends MVCObject implements _Polygon {
+  static Polygon cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Polygon.fromJsProxy(jsProxy));
   static bool isInstance(js.Proxy jsProxy) => js.instanceof(jsProxy, maps.Polygon);
 
-  Polygon([PolygonOptions opts]) : super.newInstance(maps.Polygon, [opts]);
+  Polygon([PolygonOptions opts]) : super(maps.Polygon, [opts]);
   Polygon.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  bool get editable => $.getEditable().value;
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  MVCArray<LatLng> get path => $.getPath().map((js.Proxy jsProxy) => new MVCArray.fromJsProxy(jsProxy, (js.Proxy jsProxy) => new LatLng.fromJsProxy(jsProxy))).value;
-  MVCArray<MVCArray<LatLng>> get paths => $.getPaths().map((js.Proxy jsProxy) => new MVCArray.fromJsProxy(jsProxy, (js.Proxy jsProxy) => new MVCArray.fromJsProxy(jsProxy, (js.Proxy jsProxy) => new LatLng.fromJsProxy(jsProxy)))).value;
-  bool get visible => $.getVisible().value;
-  set editable(bool editable) => $.setEditable(editable);
-  set map(GMap map) => $.setMap(map);
-  set options(PolylineOptions options) => $.setOptions(options);
-  set path(Object path) {
-    if (path is MVCArray<LatLng> || path is List<LatLng>) {
-      $.setPath(path);
-    } else {
-      throw new UnsupportedError("Parameter must be of type MVCArray<LatLng> or List<LatLng>");
-    }
-  }
-  set paths(Object paths) {
-    if (paths is MVCArray<MVCArray<LatLng>> || paths is MVCArray<LatLng> || paths is List<List<LatLng>> || paths is List<LatLng>) {
-      $.setPaths(paths);
-    } else {
-      throw new UnsupportedError("Parameter must be of type MVCArray<MVCArray<LatLng>>, MVCArray<LatLng>, List<List<LatLng>> or List<LatLng>");
-    }
-  }
-  set visible(bool visible) => $.setVisible(visible);
+  @override GMap getMap() => GMap.cast($unsafe.getMap());
+  @override MVCArray<LatLng> getPath() => MVCArray.cast($unsafe.getPath(), (e) => LatLng.cast(e));
+  @override MVCArray<MVCArray<LatLng>> getPaths() => MVCArray.cast($unsafe.getPath(), (e) => MVCArray.cast(e, (e) => LatLng.cast(e)));
+  @override void setPath(dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ path) => $unsafe.setPath(path is List ? jsw.JsArray.jsify(path) : path);
+  @override void setPaths(dynamic/*MVCArray.<MVCArray.<LatLng>>|MVCArray.<LatLng>|Array.<Array.<LatLng>>|Array.<LatLng>*/ paths) => $unsafe.setPaths(paths is List ? jsw.JsArray.jsify(paths) : paths);
+
+  bool get editable => getEditable();
+  GMap get map => getMap();
+  MVCArray<LatLng> get path => getPath();
+  MVCArray<MVCArray<LatLng>> get paths => getPaths();
+  bool get visible => getVisible();
+  set editable(bool editable) => setEditable(editable);
+  set map(GMap map) => setMap(map);
+  set options(PolygonOptions options) => setOptions(options);
+  set path(dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ path) => setPath(path);
+  set paths(dynamic/*MVCArray.<MVCArray.<LatLng>>|MVCArray.<LatLng>|Array.<Array.<LatLng>>|Array.<LatLng>*/ paths) => setPaths(paths);
+  set visible(bool visible) => setVisible(visible);
 
   PolygonEvents get on => new PolygonEvents._(this);
 }
@@ -56,7 +65,7 @@ class PolygonEvents {
   static final MOUSEOVER = "mouseover";
   static final MOUSEUP = "mouseup";
   static final RIGHTCLICK = "rightclick";
-  
+
   final Polygon _polygon;
 
   PolygonEvents._(this._polygon);

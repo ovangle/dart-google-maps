@@ -14,13 +14,20 @@
 
 part of google_maps;
 
-class FusionTablesMouseEvent extends jsw.IsJsProxy {
-  FusionTablesMouseEvent();
+abstract class _FusionTablesMouseEvent {
+  String infoWindowHtml;
+  LatLng latLng;
+  Size pixelOffset;
+  // TODO improve return type ( should be Map<String, FusionTablesCell> )
+  js.Proxy row;
+}
+
+class FusionTablesMouseEvent extends jsw.TypedProxy implements _FusionTablesMouseEvent {
+  static FusionTablesMouseEvent cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new FusionTablesMouseEvent.fromJsProxy(jsProxy));
+
+  FusionTablesMouseEvent() : super();
   FusionTablesMouseEvent.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  String get infoWindowHtml => $.infoWindowHtml.value;
-  LatLng get latLng => $.latLng.map(LatLng.INSTANCIATOR).value;
-  Size get pixelOffset => $.pixelOffset.map(Size.INSTANCIATOR).value;
-  // TODO improve return type ( should be Map<String, FusionTablesCell> )
-  js.Proxy get row => $.row.value;
+  @override LatLng get latLng => LatLng.cast($unsafe.latLng);
+  @override Size get pixelOffset => Size.cast($unsafe.pixelOffset);
 }

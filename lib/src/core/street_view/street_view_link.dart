@@ -12,29 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library optional;
+part of google_maps;
 
-final NONE = new None._();
-
-asOption(value) => value == null ? NONE : new Some._(value);
-
-abstract class Option<T> {
-  Option map(Object transform(T e));
-  T get value;
+abstract class _StreetViewLink {
+  String description;
+  num heading;
+  String pano;
 }
 
-class None<T> extends Option<T> {
-  None._();
+class StreetViewLink extends jsw.TypedProxy implements _StreetViewLink {
+  static StreetViewLink cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StreetViewLink.fromJsProxy(jsProxy));
 
-  Option map(Object transform(T e)) => NONE;
-  T get value => null;
-}
-
-class Some<T> extends Option<T> {
-  final T _value;
-
-  Some._(this._value);
-
-  Option map(Object transform(T e)) => asOption(transform(_value));
-  T get value => _value;
+  StreetViewLink() : super();
+  StreetViewLink.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }

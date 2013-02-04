@@ -14,6 +14,13 @@
 
 part of google_maps;
 
-class FusionTablesMarkerOptions extends jsw.IsJsProxy {
-  set iconName(String iconName) => $.iconName = iconName;
+abstract class _FusionTablesMarkerOptions {
+  String iconName;
+}
+
+class FusionTablesMarkerOptions extends jsw.TypedProxy implements _FusionTablesMarkerOptions {
+  static FusionTablesMarkerOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new FusionTablesMarkerOptions.fromJsProxy(jsProxy));
+
+  FusionTablesMarkerOptions() : super();
+  FusionTablesMarkerOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }

@@ -14,9 +14,16 @@
 
 part of google_maps;
 
-class StyledMapTypeOptions extends jsw.IsJsProxy {
-  set alt(String alt) => $.alt = alt;
-  set maxZoom(num maxZoom) => $.maxZoom = maxZoom;
-  set minZoom(num minZoom) => $.minZoom = minZoom;
-  set name(String name) => $.name = name;
+abstract class _StyledMapTypeOptions {
+  String alt;
+  num maxZoom;
+  num minZoom;
+  String name;
+}
+
+class StyledMapTypeOptions extends jsw.TypedProxy implements _StyledMapTypeOptions {
+  static StyledMapTypeOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StyledMapTypeOptions.fromJsProxy(jsProxy));
+
+  StyledMapTypeOptions() : super();
+  StyledMapTypeOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }

@@ -14,13 +14,22 @@
 
 part of google_maps;
 
-class DistanceMatrixResponse extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new DistanceMatrixResponse.fromJsProxy(jsProxy);
+abstract class _DistanceMatrixResponse {
+  List<String> destinationAddresses;
+  List<String> originAddresses;
+  List<DistanceMatrixResponseRow> rows;
+}
+
+class DistanceMatrixResponse extends jsw.TypedProxy implements _DistanceMatrixResponse {
+  static DistanceMatrixResponse cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new DistanceMatrixResponse.fromJsProxy(jsProxy));
 
   DistanceMatrixResponse() : super();
   DistanceMatrixResponse.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  List<String> get destinationAddresses => $.destinationAddresses.map((js.Proxy jsProxy) => new jsw.JsList<String>.fromJsProxy(jsProxy, null)).value;
-  List<String> get originAddresses => $.originAddresses.map((js.Proxy jsProxy) => new jsw.JsList<String>.fromJsProxy(jsProxy, null)).value;
-  List<DistanceMatrixResponseRow> get rows => $.rows.map((js.Proxy jsProxy) => new jsw.JsList<DistanceMatrixResponseRow>.fromJsProxy(jsProxy, DistanceMatrixResponseRow.INSTANCIATOR)).value;
+  @override List<String> get destinationAddresses => jsw.JsArray.cast($unsafe.destinationAddresses);
+  @override set destinationAddresses(List<String> destinationAddresses) => $unsafe.destinationAddresses = jsw.JsArray.jsify(destinationAddresses);
+  @override List<String> get originAddresses => jsw.JsArray.cast($unsafe.originAddresses);
+  @override set originAddresses(List<String> originAddresses) => $unsafe.originAddresses = jsw.JsArray.jsify(originAddresses);
+  @override List<DistanceMatrixResponseRow> get rows => jsw.JsArray.cast($unsafe.rows, DistanceMatrixResponseRow.cast);
+  @override set rows(List<DistanceMatrixResponseRow> rows) => $unsafe.rows = jsw.JsArray.jsify(rows);
 }

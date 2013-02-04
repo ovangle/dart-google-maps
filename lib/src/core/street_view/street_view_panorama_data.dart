@@ -14,20 +14,21 @@
 
 part of google_maps;
 
-class StreetViewPanoramaData extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new StreetViewPanoramaData.fromJsProxy(jsProxy);
+abstract class _StreetViewPanoramaData {
+  String copyright;
+  String imageDate;
+  List<StreetViewLink> links;
+  StreetViewLocation location;
+  StreetViewTileData tiles;
+}
+
+class StreetViewPanoramaData extends jsw.TypedProxy implements _StreetViewPanoramaData {
+  static StreetViewPanoramaData cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StreetViewPanoramaData.fromJsProxy(jsProxy));
 
   StreetViewPanoramaData() : super();
   StreetViewPanoramaData.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  String get copyright => $.copyright.value;
-  set copyright(String copyright) => $.copyright = copyright;
-  String get imageDate => $.imageDate.value;
-  set imageDate(String imageDate) => $.imageDate = imageDate;
-  List<StreetViewLink> get links => $.links.map((js.Proxy jsProxy) => new jsw.JsList<StreetViewLink>.fromJsProxy(jsProxy, StreetViewLink.INSTANCIATOR)).value;
-  set links(List<StreetViewLink> links) => $.links = links;
-  StreetViewLocation get location => $.location.map(StreetViewLocation.INSTANCIATOR).value;
-  set location(StreetViewLocation location) => $.location = location;
-  StreetViewTileData get tiles => $.tiles.map(StreetViewTileData.INSTANCIATOR).value;
-  set tiles(StreetViewTileData tiles) => $.tiles = tiles;
+  @override List<StreetViewLink> get links => jsw.JsArray.cast($unsafe.links, StreetViewLink.cast);
+  @override StreetViewLocation get location => StreetViewLocation.cast($unsafe.location);
+  @override StreetViewTileData get tiles => StreetViewTileData.cast($unsafe.tiles);
 }

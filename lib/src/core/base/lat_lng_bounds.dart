@@ -14,22 +14,31 @@
 
 part of google_maps;
 
-class LatLngBounds extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new LatLngBounds.fromJsProxy(jsProxy);
+abstract class _LatLngBounds {
+  bool contains(LatLng latLng);
+  bool equals(LatLngBounds other);
+  LatLngBounds extend(LatLng point);
+  // LatLng getCenter(); // LatLng get center;
+  // LatLng getNorthEast(); // LatLng get northEast;
+  // LatLng getSouthWest(); // LatLng get southWest;
+  bool intersects(LatLngBounds other);
+  bool isEmpty();
+  LatLng toSpan();
+  String toString();
+  String toUrlValue([num precision]);
+  bool union(LatLngBounds other);
+}
 
-  LatLngBounds([LatLng sw, LatLng ne]) : super.newInstance(maps.LatLngBounds, [sw, ne]);
+class LatLngBounds extends jsw.TypedProxy implements _LatLngBounds {
+  static LatLngBounds cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new LatLngBounds.fromJsProxy(jsProxy));
+
+  LatLngBounds([LatLng sw, LatLng ne]) : super(maps.LatLngBounds, [sw, ne]);
   LatLngBounds.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  bool contains(LatLng latLng) => $.contains(latLng).value;
-  bool equals(LatLngBounds other) => $.equals(other).value;
-  LatLngBounds extend(LatLng point) => $.extend(point).map(LatLngBounds.INSTANCIATOR).value;
-  LatLng get center => $.getCenter().map(LatLng.INSTANCIATOR).value;
-  LatLng get northEast => $.getNorthEast().map(LatLng.INSTANCIATOR).value;
-  LatLng get southWest => $.getSouthWest().map(LatLng.INSTANCIATOR).value;
-  bool intersects(LatLngBounds other) => $.intersects(other).value;
-  bool isEmpty() => $.isEmpty().value;
-  LatLng toSpan() => $.toSpan().map(LatLng.INSTANCIATOR).value;
-  String toString() => $.noSuchMethod(new jsw.ProxyInvocationMirror.method("toString", [])).value;
-  String toUrlValue([num precision]) => $.toUrlValue(precision).value;
-  bool union(LatLngBounds other) => $.union(other).value;
+  @override LatLngBounds extend(LatLng point) => LatLngBounds.cast($unsafe.extend(point));
+  LatLng get center => LatLng.cast($unsafe.getCenter());
+  LatLng get northEast => LatLng.cast($unsafe.getNorthEast());
+  LatLng get southWest => LatLng.cast($unsafe.getSouthWest());
+  @override LatLng toSpan() => LatLng.cast($unsafe.toSpan());
+  @override String toString() => $unsafe.noSuchMethod(new jsw.ProxyInvocationMirror.method("toString", []));
 }

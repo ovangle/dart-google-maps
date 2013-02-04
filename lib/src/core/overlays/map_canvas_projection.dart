@@ -14,14 +14,23 @@
 
 part of google_maps;
 
-class MapCanvasProjection extends MVCObject {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new MapCanvasProjection.fromJsProxy(jsProxy);
+abstract class _MapCanvasProjection {
+  LatLng fromContainerPixelToLatLng(Point pixel, [bool nowrap]);
+  LatLng fromDivPixelToLatLng(Point pixel, [bool nowrap]);
+  Point fromLatLngToContainerPixel(LatLng latLng);
+  Point fromLatLngToDivPixel(LatLng latLng);
+  @jsw.dartified num getWorldWidth();
+}
 
+class MapCanvasProjection extends MVCObject implements _MapCanvasProjection {
+  static MapCanvasProjection cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MapCanvasProjection.fromJsProxy(jsProxy));
+
+  MapCanvasProjection() : super();
   MapCanvasProjection.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  LatLng fromContainerPixelToLatLng(Point pixel, [bool nowrap]) => $.fromContainerPixelToLatLng(pixel, nowrap).map(LatLng.INSTANCIATOR).value;
-  LatLng fromDivPixelToLatLng(Point pixel, [bool nowrap]) => $.fromDivPixelToLatLng(pixel, nowrap).map(LatLng.INSTANCIATOR).value;
-  Point fromLatLngToContainerPixel(LatLng latLng) => $.fromLatLngToContainerPixel(latLng).map(Point.INSTANCIATOR).value;
-  Point fromLatLngToDivPixel(LatLng latLng) => $.fromLatLngToDivPixel(latLng).map(Point.INSTANCIATOR).value;
-  num get worldWidth => $.getWorldWidth().value;
+  @override LatLng fromContainerPixelToLatLng(Point pixel, [bool nowrap]) => LatLng.cast($unsafe.fromContainerPixelToLatLng(pixel, nowrap));
+  @override LatLng fromDivPixelToLatLng(Point pixel, [bool nowrap]) => LatLng.cast($unsafe.fromDivPixelToLatLng(pixel, nowrap));
+  @override Point fromLatLngToContainerPixel(LatLng latLng) => Point.cast($unsafe.fromLatLngToContainerPixel(latLng));
+  @override Point fromLatLngToDivPixel(LatLng latLng) => Point.cast($unsafe.fromLatLngToDivPixel(latLng));
+  num get worldWidth => getWorldWidth();
 }

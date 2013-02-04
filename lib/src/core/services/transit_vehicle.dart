@@ -14,14 +14,21 @@
 
 part of google_maps;
 
-class TransitVehicle extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new TransitVehicle.fromJsProxy(jsProxy);
+abstract class _TransitVehicle {
+  String icon;
+  @jsw.dartified String local_icon;
+  String name;
+  VehicleType type;
+}
+
+class TransitVehicle extends jsw.TypedProxy implements _TransitVehicle {
+  static TransitVehicle cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new TransitVehicle.fromJsProxy(jsProxy));
 
   TransitVehicle() : super();
   TransitVehicle.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  String get icon => $.icon.value;
-  String get localIcon => $.local_icon.value;
-  String get name => $.name.value;
-  VehicleType get type => $.type.map(VehicleType.find).value;
+  @override VehicleType get type => VehicleType.find($unsafe.type);
+
+  String get localIcon => local_icon;
+  set localIcon(String localIcon) => this.local_icon = localIcon;
 }

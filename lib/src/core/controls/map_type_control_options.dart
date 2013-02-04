@@ -14,13 +14,20 @@
 
 part of google_maps;
 
-class MapTypeControlOptions extends jsw.IsJsProxy {
-  set mapTypeIds(List<Object> mapTypeIds) {
-    if (!mapTypeIds.where((e) => !(e is String || e is MapTypeId)).isEmpty) {
-      throw new UnsupportedError("Elements in list must be of type String or MapTypeId");
-    }
-    $.mapTypeIds = mapTypeIds;
-  }
-  set position(ControlPosition position) => $.position = position;
-  set style(MapTypeControlStyle style) => $.style = style;
+abstract class _MapTypeControlOptions {
+  List mapTypeIds; // Array.<MapTypeId>|Array.<string>
+  ControlPosition position;
+  MapTypeControlStyle style;
+}
+
+class MapTypeControlOptions extends jsw.TypedProxy implements _MapTypeControlOptions {
+  static MapTypeControlOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MapTypeControlOptions.fromJsProxy(jsProxy));
+
+  MapTypeControlOptions() : super();
+  MapTypeControlOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override List get mapTypeIds => jsw.JsArray.cast($unsafe.mapTypeIds, (e) => firstNotNull([MapTypeId.find(e), e]));
+  @override set mapTypeIds(List mapTypeIds) => $unsafe.mapTypeIds = jsw.JsArray.jsify(mapTypeIds);
+  @override ControlPosition get position => ControlPosition.find($unsafe.position);
+  @override MapTypeControlStyle get style => MapTypeControlStyle.find($unsafe.style);
 }

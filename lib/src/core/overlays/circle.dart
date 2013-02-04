@@ -14,24 +14,44 @@
 
 part of google_maps;
 
-class Circle extends MVCObject {
+abstract class _Circle {
+  @jsw.dartified LatLngBounds getBounds();
+  @jsw.dartified LatLng getCenter();
+  @jsw.dartified bool getEditable();
+  @jsw.dartified GMap getMap();
+  @jsw.dartified num getRadius();
+  @jsw.dartified bool getVisible();
+  @jsw.dartified void setCenter(LatLng center);
+  @jsw.dartified void setEditable(bool editable);
+  @jsw.dartified void setMap(GMap map);
+  @jsw.dartified void setOptions(CircleOptions options);
+  @jsw.dartified void setRadius(num radius);
+  @jsw.dartified void setVisible(bool visible);
+}
+
+class Circle extends MVCObject implements _Circle{
+  static Circle cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Circle.fromJsProxy(jsProxy));
   static bool isInstance(js.Proxy jsProxy) => js.instanceof(jsProxy, maps.Circle);
 
-  Circle([CircleOptions opts]) : super.newInstance(maps.Circle, [opts]);
+  Circle([CircleOptions opts]) : super(maps.Circle, [opts]);
   Circle.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  LatLngBounds get bounds => $.getBounds().map(LatLngBounds.INSTANCIATOR).value;
-  LatLng get center => $.getCenter().map(LatLng.INSTANCIATOR).value;
-  bool get editable => $.getEditable().value;
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  num get radius => $.getRadius().value;
-  bool get visible => $.getVisible().value;
-  set center(LatLng center) => $.setCenter(center);
-  set editable(bool editable) => $.setEditable(editable);
-  set map(GMap map) => $.setMap(map);
-  set options(CircleOptions options) => $.setOptions(options);
-  set radius(num radius) => $.setRadius(radius);
-  set visible(bool visible) => $.setVisible(visible);
+  @override LatLngBounds getBounds() => LatLngBounds.cast($unsafe.getBounds());
+  @override LatLng getCenter() => LatLng.cast($unsafe.getCenter());
+  @override GMap getMap() => GMap.cast($unsafe.getMap());
+
+  LatLngBounds get bounds => getBounds();
+  LatLng get center => getCenter();
+  bool get editable => getEditable();
+  GMap get map => getMap();
+  num get radius => getRadius();
+  bool get visible => getVisible();
+  set center(LatLng center) => setCenter(center);
+  set editable(bool editable) => setEditable(editable);
+  set map(GMap map) => setMap(map);
+  set options(CircleOptions options) => setOptions(options);
+  set radius(num radius) => setRadius(radius);
+  set visible(bool visible) => setVisible(visible);
 
   CircleEvents get on => new CircleEvents._(this);
 }
@@ -47,7 +67,7 @@ class CircleEvents {
   static final MOUSEUP = "mouseup";
   static final RADIUS_CHANGED = "radius_changed";
   static final RIGHTCLICK = "rightclick";
-  
+
   final Circle _circle;
 
   CircleEvents._(this._circle);

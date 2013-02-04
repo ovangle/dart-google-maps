@@ -14,41 +14,31 @@
 
 part of google_maps;
 
-class Symbol extends jsw.IsJsProxy {
+abstract class _Symbol {
+  Point anchor;
+  String fillColor;
+  num fillOpacity;
+  dynamic/*SymbolPath|string*/ path;
+  num rotation;
+  num scale;
+  String strokeColor;
+  num strokeOpacity;
+  num strokeWeight;
+}
+
+class Symbol extends jsw.TypedProxy implements _Symbol {
+  static Symbol cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Symbol.fromJsProxy(jsProxy));
+
   Symbol() : super();
   Symbol.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  Point get anchor => $.anchor.map(Point.INSTANCIATOR).value;
-  set anchor(Point anchor) => $.anchor = anchor;
-  String get fillColor => $.fillColor.value;
-  set fillColor(String fillColor) => $.fillColor = fillColor;
-  num get fillOpacity => $.fillOpacity.value;
-  set fillOpacity(num fillOpacity) => $.fillOpacity = fillOpacity;
-  Object get path {
-    final result = $.path.value;
-    if (result is String) {
-      return result;
-    } else if (result is js.Proxy) {
+  @override Point get anchor => Point.cast($unsafe.anchor);
+  @override dynamic/*SymbolPath|string*/ get path {
+    final result = $unsafe.path;
+    if (result is js.Proxy) {
       return SymbolPath.find(result);
     } else {
-      throw new Exception("Unsupported result");
+      return result;
     }
   }
-  set path(Object path) {
-    if (path is String || path is SymbolPath) {
-      $.path = path;
-    } else {
-      throw new UnsupportedError("Parameter must be of type String or SymbolPath");
-    }
-  }
-  num get rotation => $.rotation.value;
-  set rotation(num rotation) => $.rotation = rotation;
-  num get scale => $.scale.value;
-  set scale(num scale) => $.scale = scale;
-  String get strokeColor => $.strokeColor.value;
-  set strokeColor(String strokeColor) => $.strokeColor = strokeColor;
-  num get strokeOpacity => $.strokeOpacity.value;
-  set strokeOpacity(num strokeOpacity) => $.strokeOpacity = strokeOpacity;
-  num get strokeWeight => $.strokeWeight.value;
-  set strokeWeight(num strokeWeight) => $.strokeWeight = strokeWeight;
 }

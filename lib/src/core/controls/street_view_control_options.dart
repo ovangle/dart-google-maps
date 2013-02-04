@@ -14,6 +14,15 @@
 
 part of google_maps;
 
-class StreetViewControlOptions extends jsw.IsJsProxy {
-  set position(ControlPosition position) => $.position = position;
+abstract class _StreetViewControlOptions {
+  ControlPosition position;
+}
+
+class StreetViewControlOptions extends jsw.TypedProxy implements _StreetViewControlOptions {
+  static StreetViewControlOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StreetViewControlOptions.fromJsProxy(jsProxy));
+
+  StreetViewControlOptions() : super();
+  StreetViewControlOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  ControlPosition get position => ControlPosition.find($unsafe.position);
 }

@@ -14,9 +14,16 @@
 
 part of google_maps;
 
-class MouseEvent extends jsw.IsJsProxy {
+abstract class _MouseEvent {
+  LatLng latLng;
+  void stop();
+}
+
+class MouseEvent extends jsw.TypedProxy implements _MouseEvent {
+  static MouseEvent cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MouseEvent.fromJsProxy(jsProxy));
+
   MouseEvent() : super();
   MouseEvent.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  LatLng get latLng => $.latLng.map(LatLng.INSTANCIATOR).value;
+  @override LatLng get latLng => LatLng.cast($unsafe.latLng);
 }

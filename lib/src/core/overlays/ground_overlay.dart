@@ -14,16 +14,30 @@
 
 part of google_maps;
 
-class GroundOverlay extends MVCObject {
-  GroundOverlay(String url, LatLngBounds bounds, [GroundOverlayOptions opts]) : super.newInstance(maps.GroundOverlay, [url, bounds, opts]);
+abstract class _GroundOverlay {
+  @jsw.dartified LatLngBounds getBounds();
+  @jsw.dartified GMap getMap();
+  @jsw.dartified num getOpacity();
+  @jsw.dartified String getUrl();
+  @jsw.dartified void setMap(GMap map);
+  @jsw.dartified void setOpacity(num opacity);
+}
+
+class GroundOverlay extends MVCObject implements _GroundOverlay {
+  static GroundOverlay cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new GroundOverlay.fromJsProxy(jsProxy));
+
+  GroundOverlay(String url, LatLngBounds bounds, [GroundOverlayOptions opts]) : super(maps.GroundOverlay, [url, bounds, opts]);
   GroundOverlay.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  LatLngBounds get bounds => $.getBounds().map(LatLngBounds.INSTANCIATOR).value;
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  num get opacity => $.getOpacity().value;
-  String get url => $.getUrl().value;
-  set map(GMap map) => $.setMap(map);
-  set opacity(num opacity) => $.setOpacity(opacity);
+  @override LatLngBounds getBounds() => LatLngBounds.cast($unsafe.getBounds());
+  @override GMap getMap() => GMap.cast($unsafe.getMap());
+
+  LatLngBounds get bounds => getBounds();
+  GMap get map => getMap();
+  num get opacity => getOpacity();
+  String get url => getUrl();
+  set map(GMap map) => setMap(map);
+  set opacity(num opacity) => setOpacity(opacity);
 
   GroundOverlayEvents get on => new GroundOverlayEvents._(this);
 }
@@ -31,7 +45,7 @@ class GroundOverlay extends MVCObject {
 class GroundOverlayEvents {
   static final CLICK = "click";
   static final DBLCLICK = "dblclick";
-  
+
   final GroundOverlay _groundOverlay;
 
   GroundOverlayEvents._(this._groundOverlay);

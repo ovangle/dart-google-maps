@@ -14,13 +14,26 @@
 
 part of google_maps;
 
-class ImageMapTypeOptions extends jsw.IsJsProxy {
-  set alt(String alt) => $.alt = alt;
+typedef String GetTileUrl(Point point, num zoomLevel);
+
+abstract class _ImageMapTypeOptions {
+  String alt;
   // REPORTED report wtf arg : http://code.google.com/p/gmaps-api-issues/issues/detail?id=4573
-  set getTileUrl(String callback(Point point, num zoomLevel)) => $.getTileUrl = new jsw.Callback.many((Option<js.Proxy> point, Option<num> zoomLevel, [Option<Object> wtf]) => callback(point.map(Point.INSTANCIATOR).value, zoomLevel.value));
-  set maxZoom(num maxZoom) => $.maxZoom = maxZoom;
-  set minZoom(num minZoom) => $.minZoom = minZoom;
-  set name(String name) => $.name = name;
-  set opacity(num opacity) => $.opacity = opacity;
-  set tileSize(Size tileSize) => $.tileSize = tileSize;
+  GetTileUrl getTileUrl;
+  num maxZoom;
+  num minZoom;
+  String name;
+  num opacity;
+  Size tileSize;
+}
+
+class ImageMapTypeOptions extends jsw.TypedProxy implements _MapTypeControlOptions {
+  static ImageMapTypeOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new ImageMapTypeOptions.fromJsProxy(jsProxy));
+
+  ImageMapTypeOptions() : super();
+  ImageMapTypeOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  set getTileUrl(GetTileUrl callback) => $unsafe.getTileUrl = new jsw.Callback.many((js.Proxy point, num zoomLevel, [dynamic wtf]) => callback(Point.cast(point), zoomLevel));
+  GetTileUrl  get getTileUrl => (Point point, num zoomLevel) => $unsafe.getTileUrl(point, zoomLevel);
+  Size get tileSize => Size.cast($unsafe.tileSize);
 }

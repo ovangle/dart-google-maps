@@ -14,19 +14,23 @@
 
 part of google_maps;
 
-class MarkerShape extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new MarkerShape.fromJsProxy(jsProxy);
+abstract class _MarkerShape {
+  List<num> coords;
+  MarkerShapeType type;
+}
+
+class MarkerShape extends jsw.TypedProxy implements _MarkerShape {
+  static MarkerShape cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MarkerShape.fromJsProxy(jsProxy));
 
   MarkerShape() : super();
   MarkerShape.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  List<num> get coords => $.coords.map((js.Proxy jsProxy) => new jsw.JsList<num>.fromJsProxy(jsProxy, null)).value;
-  set coords(List<num> coords) => $.coords = coords;
-  MarkerShapeType get type => MarkerShapeType.find($.type.value);
-  set type(MarkerShapeType type) => $.type = type.value;
+  @override List<num> get coords => jsw.JsArray.cast($unsafe.coords);
+  @override set coords(List<num> coords) => $unsafe.coords = jsw.JsArray.jsify(coords);
+  @override MarkerShapeType get type => MarkerShapeType.find($unsafe.type);
 }
 
-class MarkerShapeType extends jsw.IsEnum<String> {
+class MarkerShapeType extends IsEnum<String> {
   static final CIRCLE = new MarkerShapeType._("circle");
   static final POLY = new MarkerShapeType._("poly");
   static final RECT = new MarkerShapeType._("rect");

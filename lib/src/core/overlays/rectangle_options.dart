@@ -14,16 +14,26 @@
 
 part of google_maps;
 
-class RectangleOptions extends jsw.IsJsProxy {
-  set bounds(LatLngBounds bounds) => $.bounds = bounds;
-  set clickable(bool clickable) => $.clickable = clickable;
-  set editable(bool editable) => $.editable = editable;
-  set fillColor(String fillColor) => $.fillColor = fillColor;
-  set fillOpacity(num fillOpacity) => $.fillOpacity = fillOpacity;
-  set map(GMap map) => $.map = map;
-  set strokeColor(String strokeColor) => $.strokeColor = strokeColor;
-  set strokeOpacity(num strokeOpacity) => $.strokeOpacity = strokeOpacity;
-  set strokeWeight(num strokeWeight) => $.strokeWeight = strokeWeight;
-  set visible(bool visible) => $.visible = visible;
-  set zIndex(num zIndex) => $.zIndex = zIndex;
+abstract class _RectangleOptions {
+  LatLngBounds bounds;
+  bool clickable;
+  bool editable;
+  String fillColor;
+  num fillOpacity;
+  GMap map;
+  String strokeColor;
+  num strokeOpacity;
+  num strokeWeight;
+  bool visible;
+  num zIndex;
+}
+
+class RectangleOptions extends jsw.TypedProxy implements _RectangleOptions {
+  static RectangleOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new RectangleOptions.fromJsProxy(jsProxy));
+
+  RectangleOptions() : super();
+  RectangleOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override LatLngBounds get bounds => LatLngBounds.cast($unsafe.bounds);
+  @override GMap get map => GMap.cast($unsafe.map);
 }

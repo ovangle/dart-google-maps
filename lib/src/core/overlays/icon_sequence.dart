@@ -14,12 +14,18 @@
 
 part of google_maps;
 
-class IconSequence extends jsw.IsJsProxy {
+abstract class _IconSequence {
+  bool fixedRotation;
+  Symbol icon;
+  String offset;
+  String repeat;
+}
+
+class IconSequence extends jsw.TypedProxy implements _IconSequence {
+  static IconSequence cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new IconSequence.fromJsProxy(jsProxy));
+
   IconSequence() : super();
   IconSequence.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  set fixedRotation(bool fixedRotation) => $.fixedRotation = fixedRotation;
-  set icon(Symbol icon) => $.icon = icon;
-  set offset(String offset) => $.offset = offset;
-  set repeat(String repeat) => $.repeat = repeat;
+  Symbol get icon => Symbol.cast($unsafe.icon);
 }

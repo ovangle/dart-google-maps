@@ -14,12 +14,14 @@
 
 part of google_maps;
 
-class GDuration extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new GDuration.fromJsProxy(jsProxy);
+abstract class _GDuration {
+  String text;
+  num value;
+}
+
+class GDuration extends jsw.TypedProxy implements _GDuration {
+  static GDuration cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new GDuration.fromJsProxy(jsProxy));
 
   GDuration() : super();
   GDuration.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
-
-  String get text => $.text.value;
-  num get value => $.value.value;
 }

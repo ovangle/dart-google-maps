@@ -14,26 +14,43 @@
 
 part of google_maps;
 
-class DirectionsRenderer extends MVCObject {
-  DirectionsRenderer([DirectionsRendererOptions opts]) : super.newInstance(maps.DirectionsRenderer, [opts]);
+abstract class _DirectionsRenderer {
+  @jsw.dartified DirectionsResult getDirections();
+  @jsw.dartified GMap getMap();
+  @jsw.dartified html.Node getPanel();
+  @jsw.dartified num getRouteIndex();
+  @jsw.dartified void setDirections(DirectionsResult direction);
+  @jsw.dartified void setMap(GMap map);
+  @jsw.dartified void setOptions(DirectionsRendererOptions options);
+  @jsw.dartified void setPanel(html.Node panel);
+  @jsw.dartified void setRouteIndex(num routeIndex);
+}
+
+class DirectionsRenderer extends MVCObject implements _DirectionsRenderer {
+  static DirectionsRenderer cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new DirectionsRenderer.fromJsProxy(jsProxy));
+
+  DirectionsRenderer([DirectionsRendererOptions opts]) : super(maps.DirectionsRenderer, [opts]);
   DirectionsRenderer.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  DirectionsResult get directions => $.getDirections().map(DirectionsResult.INSTANCIATOR).value;
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  html.Node get panel => $.getPanel().value;
-  num get routeIndex => $.getRouteIndex().value;
-  set directions(DirectionsResult directions) => $.setDirections(directions);
-  set map(GMap map) => $.setMap(map);
-  set options(DirectionsRendererOptions options) => $.setOptions(options);
-  set panel(html.Node panel) => $.setPanel(panel);
-  set routeIndex(num routeIndex) => $.setRouteIndex(routeIndex);
+  @override DirectionsResult getDirections() => DirectionsResult.cast($unsafe.getDirection());
+  @override GMap getMap() => GMap.cast($unsafe.getMap());
+
+  DirectionsResult get directions => getDirections();
+  GMap get map => getMap();
+  html.Node get panel => getPanel();
+  num get routeIndex => getRouteIndex();
+  set directions(DirectionsResult directions) => setDirections(directions);
+  set map(GMap map) => setMap(map);
+  set options(DirectionsRendererOptions options) => setOptions(options);
+  set panel(html.Node panel) => setPanel(panel);
+  set routeIndex(num routeIndex) => setRouteIndex(routeIndex);
 
   DirectionsRendererEvents get on => new DirectionsRendererEvents._(this);
 }
 
 class DirectionsRendererEvents {
   static final DIRECTIONS_CHANGED = "directions_changed";
-  
+
   final DirectionsRenderer _directionsRenderer;
 
   DirectionsRendererEvents._(this._directionsRenderer);

@@ -14,17 +14,27 @@
 
 part of google_maps;
 
-class CircleOptions extends jsw.IsJsProxy {
-  set center(LatLng center) => $.center = center;
-  set clickable(bool clickable) => $.clickable = clickable;
-  set editable(bool editable) => $.editable = editable;
-  set fillColor(String fillColor) => $.fillColor = fillColor;
-  set fillOpacity(num fillOpacity) => $.fillOpacity = fillOpacity;
-  set map(GMap map) => $.map = map;
-  set radius(num radius) => $.radius = radius;
-  set strokeColor(String strokeColor) => $.strokeColor = strokeColor;
-  set strokeOpacity(num strokeOpacity) => $.strokeOpacity = strokeOpacity;
-  set strokeWeight(num strokeWeight) => $.strokeWeight = strokeWeight;
-  set visible(bool visible) => $.visible = visible;
-  set zIndex(num zIndex) => $.zIndex = zIndex;
+abstract class _CircleOptions {
+  LatLng center;
+  bool clickable;
+  bool editable;
+  String fillColor;
+  num fillOpacity;
+  GMap map;
+  num radius;
+  String strokeColor;
+  num strokeOpacity;
+  num strokeWeight;
+  bool visible;
+  num zIndex;
+}
+
+class CircleOptions extends jsw.TypedProxy implements _CircleOptions {
+  static CircleOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new CircleOptions.fromJsProxy(jsProxy));
+
+  CircleOptions() : super();
+  CircleOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  LatLng get center => LatLng.cast($unsafe.center);
+  GMap get map => GMap.cast($unsafe.map);
 }

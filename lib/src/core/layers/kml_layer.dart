@@ -14,17 +14,29 @@
 
 part of google_maps;
 
-class KmlLayer extends MVCObject {
-  KmlLayer([KmlLayerOptions options]) : super.newInstance(maps.KmlLayer, [options]);
+abstract class _KmlLayer {
+  // LatLngBounds getDefaultViewport(); // LatLngBounds get defaultViewport;
+  // GMap getMap(); // GMap get map;
+  // KmlLayerMetadata getMetadata(); // KmlLayerMetadata get metadata;
+  // KmlLayerStatus getStatus(); // KmlLayerStatus get status;
+  // String getUrl(); // String get url;
+  // setMap(GMap map); // set map(GMap map);
+  // setUrl(String url); // set url(String url);
+}
+
+class KmlLayer extends MVCObject implements _KmlLayer {
+  static KmlLayer cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new KmlLayer.fromJsProxy(jsProxy));
+
+  KmlLayer([KmlLayerOptions options]) : super(maps.KmlLayer, [options]);
   KmlLayer.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  LatLngBounds get defaultViewport => $.getDefaultViewport().map(LatLngBounds.INSTANCIATOR).value;
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  KmlLayerMetadata get metadata => $.getMetadata().map(KmlLayerMetadata.INSTANCIATOR).value;
-  KmlLayerStatus get status => $.getStatus().map(KmlLayerStatus.find).value;
-  String get url => $.getUrl().value;
-  set map(GMap map) => $.setMap(map);
-  set url(String url) => $.setUrl(url);
+  LatLngBounds get defaultViewport => LatLngBounds.cast($unsafe.getDefaultViewport());
+  GMap get map => GMap.cast($unsafe.getMap());
+  KmlLayerMetadata get metadata => KmlLayerMetadata.cast($unsafe.getMetadata());
+  KmlLayerStatus get status => KmlLayerStatus.find($unsafe.getStatus());
+  String get url => $unsafe.getUrl();
+  set map(GMap map) => $unsafe.setMap(map);
+  set url(String url) => $unsafe.setUrl(url);
 
   KmlLayerEvents get on => new KmlLayerEvents._(this);
 }
@@ -33,7 +45,7 @@ class KmlLayerEvents {
   static final CLICK = "click";
   static final DEFAULTVIEWPORT_CHANGED = "defaultviewport_changed";
   static final STATUS_CHANGED = "status_changed";
-  
+
   final KmlLayer _kmlLayer;
 
   KmlLayerEvents._(this._kmlLayer);

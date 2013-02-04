@@ -14,26 +14,25 @@
 
 part of google_maps;
 
-class MapType extends jsw.IsJsProxy {
-  MapType() : super();
+abstract class _MapType {
+  html.Node getTile(Point tileCoord, num zoom, html.Document ownerDocument);
+  html.Node releaseTile(html.Node tile);
+
+  String alt;
+  num maxZoom;
+  num minZoom;
+  String name;
+  Projection projection;
+  num radius;
+  Size tileSize;
+}
+
+class MapType extends jsw.TypedProxy implements _MapType {
+  static MapType cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MapType.fromJsProxy(jsProxy));
+
+  MapType([js.FunctionProxy function, List args]) : super(function, args);
   MapType.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
-  MapType.newInstance(objectName, [List args]) : super.newInstance(objectName, args);
 
-  html.Node getTile(Point tileCoord, num zoom, html.Document ownerDocument) => $.getTile(tileCoord, zoom, ownerDocument).value;
-  html.Node releaseTile(html.Node tile) => $.releaseTile(tile).value;
-
-  String get alt => $.alt.value;
-  set alt(String alt) => $.alt = alt;
-  num get maxZoom => $.maxZoom.value;
-  set maxZoom(num maxZoom) => $.maxZoom = maxZoom;
-  num get minZoom => $.minZoom.value;
-  set minZoom(num minZoom) => $.minZoom = minZoom;
-  String get name => $.name.value;
-  set name(String name) => $.name = name;
-  Projection get projection => $.projection.map(Projection.INSTANCIATOR).value;
-  set projection(Projection projection) => $.projection = projection;
-  num get radius => $.radius.value;
-  set radius(num radius) => $.radius = radius;
-  Size get tileSize => $.tileSize.map(Size.INSTANCIATOR).value;
-  set tileSize(Size tileSize) => $.tileSize = tileSize;
+  Projection get projection => Projection.cast($unsafe.projection);
+  Size get tileSize => Size.cast($unsafe.tileSize);
 }

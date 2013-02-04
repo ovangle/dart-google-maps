@@ -14,7 +14,13 @@
 
 part of google_maps;
 
+abstract class _StyledMapType {
+}
+
 // TODO extends MVCObject mixin MapType
-class StyledMapType extends MapType {
-  StyledMapType(List<MapTypeStyle> styles, [StyledMapTypeOptions options]) : super.newInstance(maps.StyledMapType, [styles, options]);
+class StyledMapType extends MapType implements _StyledMapType {
+  static StyledMapType cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StyledMapType.fromJsProxy(jsProxy));
+
+  StyledMapType(List<MapTypeStyle> styles, [StyledMapTypeOptions options]) : super(maps.StyledMapType, [styles, options]);
+  StyledMapType.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }

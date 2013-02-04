@@ -14,45 +14,62 @@
 
 part of google_maps;
 
-class MapOptions extends jsw.IsJsProxy {
-  set backgroundColor(String backgroundColor) => $.backgroundColor = backgroundColor;
-  set center(LatLng center) => $.center = center;
-  set disableDefaultUI(bool disableDefaultUI) => $.disableDefaultUI = disableDefaultUI;
-  set disableDoubleClickZoom(bool disableDoubleClickZoom) => $.disableDoubleClickZoom = disableDoubleClickZoom;
-  set draggable(bool draggable) => $.draggable = draggable;
-  set draggableCursor(String draggableCursor) => $.draggableCursor = draggableCursor;
-  set draggingCursor(String draggingCursor) => $.draggingCursor = draggingCursor;
-  set heading(num heading) => $.heading = heading;
-  set keyboardShortcuts(bool keyboardShortcuts) => $.keyboardShortcuts = keyboardShortcuts;
-  set mapMaker(bool mapMaker) => $.mapMaker = mapMaker;
-  set mapTypeControl(bool mapTypeControl) => $.mapTypeControl = mapTypeControl;
-  set mapTypeControlOptions(MapTypeControlOptions mapTypeControlOptions) => $.mapTypeControlOptions = mapTypeControlOptions;
-  // TODO bad online doc
-  set mapTypeId(Object mapTypeId) {
-    if (mapTypeId is String || mapTypeId is MapTypeId) {
-      $.mapTypeId = mapTypeId;
-    } else {
-      throw new UnsupportedError("Parameter must be of type String or MapTypeId");
-    }
+abstract class _MapOptions {
+  String backgroundColor;
+  LatLng center;
+  bool disableDefaultUI;
+  bool disableDoubleClickZoom;
+  bool draggable;
+  String draggableCursor;
+  String draggingCursor;
+  num heading;
+  bool keyboardShortcuts;
+  bool mapMaker;
+  bool mapTypeControl;
+  MapTypeControlOptions mapTypeControlOptions;
+  // TODO bad online doc : should be MapTypeId|string
+  // MapTypeId mapTypeId;
+  Object mapTypeId;
+  num maxZoom;
+  num minZoom;
+  bool noClear;
+  bool overviewMapControl;
+  OverviewMapControlOptions overviewMapControlOptions;
+  bool panControl;
+  PanControlOptions panControlOptions;
+  bool rotateControl;
+  RotateControlOptions rotateControlOptions;
+  bool scaleControl;
+  ScaleControlOptions scaleControlOptions;
+  bool scrollwheel;
+  StreetViewPanorama streetView;
+  bool streetViewControl;
+  StreetViewControlOptions streetViewControlOptions;
+  List<MapTypeStyle> styles;
+  num tilt;
+  num zoom;
+  bool zoomControl;
+  ZoomControlOptions zoomControlOptions;
+}
+
+class MapOptions extends jsw.TypedProxy implements _MapOptions {
+  static MapOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MapOptions.fromJsProxy(jsProxy));
+
+  MapOptions() : super();
+  MapOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  LatLng get center => LatLng.cast($unsafe.center);
+  MapTypeControlOptions get mapTypeControlOptions => MapTypeControlOptions.cast($unsafe.mapTypeControlOptions);
+  Object get mapTypeId {
+    final mapTypeId = $unsafe.mapTypeId;
+    return firstNotNull([MapTypeId.find(mapTypeId), mapTypeId]);
   }
-  set maxZoom(num maxZoom) => $.maxZoom = maxZoom;
-  set minZoom(num minZoom) => $.minZoom = minZoom;
-  set noClear(bool noClear) => $.noClear = noClear;
-  set overviewMapControl(bool overviewMapControl) => $.overviewMapControl = overviewMapControl;
-  set overviewMapControlOptions(OverviewMapControlOptions overviewMapControlOptions) => $.overviewMapControlOptions = overviewMapControlOptions;
-  set panControl(bool panControl) => $.panControl = panControl;
-  set panControlOptions(PanControlOptions panControlOptions) => $.panControlOptions = panControlOptions;
-  set rotateControl(bool rotateControl) => $.rotateControl = rotateControl;
-  set rotateControlOptions(RotateControlOptions rotateControlOptions) => $.rotateControlOptions = rotateControlOptions;
-  set scaleControl(bool scaleControl) => $.scaleControl = scaleControl;
-  set scaleControlOptions(ScaleControlOptions scaleControlOptions) => $.scaleControlOptions = scaleControlOptions;
-  set scrollwheel(bool scrollwheel) => $.scrollwheel = scrollwheel;
-  set streetView(StreetViewPanorama streetView) => $.streetView = streetView;
-  set streetViewControl(bool streetViewControl) => $.streetViewControl = streetViewControl;
-  set streetViewControlOptions(StreetViewControlOptions streetViewControlOptions) => $.streetViewControlOptions = streetViewControlOptions;
-  set styles(List<MapTypeStyle> styles) => $.styles = styles;
-  set tilt(num tilt) => $.tilt = tilt;
-  set zoom(num zoom) => $.zoom = zoom;
-  set zoomControl(bool zoomControl) => $.zoomControl = zoomControl;
-  set zoomControlOptions(ZoomControlOptions zoomControlOptions) => $.zoomControlOptions = zoomControlOptions;
+  OverviewMapControlOptions get overviewMapControlOptions => OverviewMapControlOptions.cast($unsafe.overviewMapControlOptions);
+  PanControlOptions get panControlOptions => PanControlOptions.cast($unsafe.panControlOptions);
+  RotateControlOptions get rotateControlOptions => RotateControlOptions.cast($unsafe.rotateControlOptions);
+  ScaleControlOptions get scaleControlOptions => ScaleControlOptions.cast($unsafe.scaleControlOptions);
+  StreetViewPanorama get streetView => StreetViewPanorama.cast($unsafe.streetView);
+  StreetViewControlOptions get streetViewControlOptions => StreetViewControlOptions.cast($unsafe.streetViewControlOptions);
+  List<MapTypeStyle> get styles => jsw.JsArray.cast($unsafe.mapTypeIds, (e) => MapTypeStyle.cast(e));
+  ZoomControlOptions get zoomControlOptions => ZoomControlOptions.cast($unsafe.zoomControlOptions);
 }

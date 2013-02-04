@@ -14,20 +14,28 @@
 
 part of google_maps;
 
-class FusionTablesLayer extends MVCObject {
-  FusionTablesLayer(FusionTablesLayerOptions options) : super.newInstance(maps.FusionTablesLayer, [options]);
+abstract class _FusionTablesLayer {
+  // GMap getMap(); // GMap get map;
+  // void setMap(GMap map); // set map(GMap map);
+  // void setOptions(FusionTablesLayerOptions options); // set options(FusionTablesLayerOptions options);
+}
+
+class FusionTablesLayer extends jsw.TypedProxy implements _FusionTablesLayer {
+  static FusionTablesLayer cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new FusionTablesLayer.fromJsProxy(jsProxy));
+
+  FusionTablesLayer(FusionTablesLayerOptions options) : super(maps.FusionTablesLayer, [options]);
   FusionTablesLayer.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  set map(GMap map) => $.setMap(map);
-  set options(FusionTablesLayerOptions options) => $.setOptions(options);
+  GMap get map => GMap.cast($unsafe.getMap());
+  set map(GMap map) => $unsafe.setMap(map);
+  set options(FusionTablesLayerOptions options) => $unsafe.setOptions(options);
 
   FusionTablesLayerEvents get on => new FusionTablesLayerEvents._(this);
 }
 
 class FusionTablesLayerEvents {
   static final CLICK = "click";
-  
+
   final FusionTablesLayer _fusionTablesLayer;
 
   FusionTablesLayerEvents._(this._fusionTablesLayer);

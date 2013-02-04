@@ -14,10 +14,15 @@
 
 part of google_maps;
 
-class PolyMouseEvent extends MouseEvent {
-  PolyMouseEvent.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+abstract class _PolyMouseEvent {
+  num edge;
+  num path;
+  num vertex;
+}
 
-  num get edge => $.edge.value;
-  num get path => $.path.value;
-  num get vertex => $.vertex.value;
+class PolyMouseEvent extends MouseEvent implements _PolyMouseEvent {
+  static PolyMouseEvent cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new PolyMouseEvent.fromJsProxy(jsProxy));
+
+  PolyMouseEvent() : super();
+  PolyMouseEvent.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }

@@ -14,16 +14,33 @@
 
 part of google_maps;
 
-class DirectionsRoute extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new DirectionsRoute.fromJsProxy(jsProxy);
+abstract class _DirectionsRoute {
+  LatLngBounds bounds;
+  String copyrights;
+  List<DirectionsLeg> legs;
+  @jsw.dartified List<LatLng> overview_path;
+  List<String> warnings;
+  @jsw.dartified List<num> waypoint_order;
+}
+
+class DirectionsRoute extends jsw.TypedProxy implements _DirectionsRoute {
+  static DirectionsRoute cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new DirectionsRoute.fromJsProxy(jsProxy));
 
   DirectionsRoute() : super();
   DirectionsRoute.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  LatLngBounds get bounds => new LatLngBounds.fromJsProxy($.bounds.value);
-  String get copyrights => $.copyrights.value;
-  List<DirectionsLeg> get legs => $.legs.map((js.Proxy jsProxy) => new jsw.JsList<DirectionsLeg>.fromJsProxy(jsProxy, DirectionsLeg.INSTANCIATOR)).value;
-  List<LatLng> get overviewPath => $.overview_path.map((js.Proxy jsProxy) => new jsw.JsList<LatLng>.fromJsProxy(jsProxy, LatLng.INSTANCIATOR)).value;
-  List<String> get warnings => $.warnings.map((js.Proxy jsProxy) => new jsw.JsList<String>.fromJsProxy(jsProxy, null)).value;
-  List<num> get waypointOrder => $.waypoint_order.map((js.Proxy jsProxy) => new jsw.JsList<num>.fromJsProxy(jsProxy, null)).value;
+  @override LatLngBounds get bounds => LatLngBounds.cast($unsafe.bounds);
+  @override List<DirectionsLeg> get legs => jsw.JsArray.cast($unsafe.legs, DirectionsLeg.cast);
+  @override set legs(List<DirectionsLeg> legs) => $unsafe.legs = jsw.JsArray.jsify(legs);
+  @override List<LatLng> get overview_path => jsw.JsArray.cast($unsafe.overview_path, LatLng.cast);
+  @override set overview_path(List<LatLng> overview_path) => $unsafe.overview_path = jsw.JsArray.jsify(overview_path);
+  @override List<String> get warnings => jsw.JsArray.cast($unsafe.warnings);
+  @override set warnings(List<String> warnings) => $unsafe.warnings = jsw.JsArray.jsify(warnings);
+  @override List<num> get waypoint_order => jsw.JsArray.cast($unsafe.waypoint_order);
+  @override set waypoint_order(List<num> waypoint_order) => $unsafe.waypoint_order = jsw.JsArray.jsify(waypoint_order);
+
+  List<LatLng> get overviewPath => overview_path;
+  set overviewPath(List<LatLng> overviewPath) => overview_path = overviewPath;
+  List<num> get waypointOrder => waypoint_order;
+  set waypointOrder(List<num> waypointOrder) => waypoint_order = waypointOrder;
 }

@@ -14,6 +14,16 @@
 
 part of google_maps;
 
-class LocationElevationRequest extends jsw.IsJsProxy {
-  set locations(List<LatLng> locations) => $.locations = locations;
+abstract class _LocationElevationRequest {
+  List<LatLng> locations;
+}
+
+class LocationElevationRequest extends jsw.TypedProxy implements _LocationElevationRequest {
+  static LocationElevationRequest cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new LocationElevationRequest.fromJsProxy(jsProxy));
+
+  LocationElevationRequest() : super();
+  LocationElevationRequest.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override List<LatLng> get locations => jsw.JsArray.cast($unsafe.locations, LatLng.cast);
+  @override set locations(List<LatLng> locations) => $unsafe.locations = jsw.JsArray.jsify(locations);
 }

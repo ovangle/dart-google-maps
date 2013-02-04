@@ -14,18 +14,29 @@
 
 part of google_maps;
 
-class TransitLine extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new TransitLine.fromJsProxy(jsProxy);
+abstract class _TransitLine {
+  List<TransitAgency> agencies;
+  String color;
+  String icon;
+  String name;
+  @jsw.dartified String short_name;
+  @jsw.dartified String text_color;
+  String url;
+  TransitVehicle vehicle;
+}
+
+class TransitLine extends jsw.TypedProxy implements _TransitLine {
+  static TransitLine cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new TransitLine.fromJsProxy(jsProxy));
 
   TransitLine() : super();
   TransitLine.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  List<TransitAgency> get agencies => $.agencies.map((js.Proxy jsProxy) => new jsw.JsList<TransitAgency>.fromJsProxy(jsProxy, TransitAgency.INSTANCIATOR)).value;
-  String get color => $.color.value;
-  String get icon => $.icon.value;
-  String get name => $.name.value;
-  String get shortName => $.short_name.value;
-  String get textColor => $.text_color.value;
-  String get url => $.url.value;
-  TransitVehicle get vehicle => $.vehicle.map(TransitVehicle.INSTANCIATOR).value;
+  @override List<TransitAgency> get agencies => jsw.JsArray.cast($unsafe.agencies, TransitAgency.cast);
+  @override set agencies(List agencies) => $unsafe.agencies = jsw.JsArray.jsify(agencies);
+  @override TransitVehicle get vehicle => TransitVehicle.cast($unsafe.vehicle);
+
+  String get shortName => short_name;
+  set shortName(String shortName) => this.short_name = shortName;
+  String get textColor => text_color;
+  set textColor(String textColor) => this.text_color = textColor;
 }

@@ -14,16 +14,29 @@
 
 part of google_maps;
 
-class MapTypeStyler extends jsw.IsJsProxy {
-  set gamma(num gamma) => $.gamma = gamma;
-  set hue(String hue) => $.hue = hue;
-  set invertLightness(bool invertLightness) => $.invert_lightness = invertLightness;
-  set lightness(num lightness) => $.lightness = lightness;
-  set saturation(num saturation) => $.saturation = saturation;
-  set visibility(MapTypeStylerVisibility visibility) => $.visibility = visibility.value;
+abstract class _MapTypeStyler {
+  String color;
+  num gamma;
+  String hue;
+  // bool invert_lightness; // bool invertLightness;
+  num lightness;
+  num saturation;
+  MapTypeStylerVisibility visibility;
+  num weight;
 }
 
-class MapTypeStylerVisibility extends jsw.IsEnum<String> {
+class MapTypeStyler extends jsw.TypedProxy implements _MapTypeStyler {
+  static MapTypeStyler cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MapTypeStyler.fromJsProxy(jsProxy));
+
+  MapTypeStyler() : super();
+  MapTypeStyler.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  bool get invertLightness => $unsafe.invert_lightness;
+  set invertLightness(bool invertLightness) => $unsafe.invert_lightness = invertLightness;
+  MapTypeStylerVisibility get visibility => MapTypeStylerVisibility.find($unsafe.visibility);
+}
+
+class MapTypeStylerVisibility extends IsEnum<String> {
   static final ON = new MapTypeStylerVisibility._("on");
   static final OFF = new MapTypeStylerVisibility._("off");
   static final SIMPLIFIED = new MapTypeStylerVisibility._("simplified");

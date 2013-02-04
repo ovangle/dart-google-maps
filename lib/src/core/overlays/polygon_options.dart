@@ -14,24 +14,36 @@
 
 part of google_maps;
 
-class PolygonOptions extends jsw.IsJsProxy {
-  set clickable(bool clickable) => $.clickable = clickable;
-  set editable(bool editable) => $.editable = editable;
-  set fillColor(String fillColor) => $.fillColor = fillColor;
-  set fillOpacity(num fillOpacity) => $.fillOpacity = fillOpacity;
-  set geodesic(bool geodesic) => $.geodesic = geodesic;
-  set map(GMap map) => $.map = map;
-  set paths(Object paths) {
-    if (paths is MVCArray<MVCArray<LatLng>> || paths is MVCArray<LatLng> || paths is List<List<LatLng>> || paths is List<LatLng>) {
-      $.paths = paths;
-    } else {
-      throw new UnsupportedError("Parameter must be of type MVCArray<MVCArray<LatLng>>, MVCArray<LatLng>, List<List<LatLng>> or List<LatLng>");
+abstract class _PolygonOptions {
+  bool clickable;
+  bool editable;
+  String fillColor;
+  num fillOpacity;
+  bool geodesic;
+  GMap map;
+  dynamic/*MVCArray.<MVCArray.<LatLng>>|MVCArray.<LatLng>|Array.<Array.<LatLng>>|Array.<LatLng>*/ paths;
+  String strokeColor;
+  num strokeOpacity;
+  StrokePosition strokePosition;
+  num strokeWeight;
+  bool visible;
+  num zIndex;
+}
+
+class PolygonOptions extends jsw.TypedProxy implements _PolygonOptions {
+  static PolygonOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new PolygonOptions.fromJsProxy(jsProxy));
+
+  PolygonOptions() : super();
+  PolygonOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override GMap get map => GMap.cast($unsafe.map);
+  @override dynamic/*MVCArray.<MVCArray.<LatLng>>|MVCArray.<LatLng>|Array.<Array.<LatLng>>|Array.<LatLng>*/ get paths {
+    final result = $unsafe.paths;
+    if (MVCArray.isInstance(result)) {
+      return MVCArray.cast(result, (e) => LatLng.isInstance(e) ? LatLng.cast(e) : MVCArray.cast(e, (e) => LatLng.cast(e)));
     }
+    return jsw.JsArray.cast(result, (e) => LatLng.isInstance(e) ? LatLng.cast(e) : jsw.JsArray.cast(e, (e) => LatLng.cast(e)));
   }
-  set strokeColor(String strokeColor) => $.strokeColor = strokeColor;
-  set strokeOpacity(num strokeOpacity) => $.strokeOpacity = strokeOpacity;
-  set strokePosition(StrokePosition strokePosition) => $.strokePosition = strokePosition;
-  set strokeWeight(num strokeWeight) => $.strokeWeight = strokeWeight;
-  set visible(bool visible) => $.visible = visible;
-  set zIndex(num zIndex) => $.zIndex = zIndex;
+  @override set paths(dynamic/*MVCArray.<MVCArray.<LatLng>>|MVCArray.<LatLng>|Array.<Array.<LatLng>>|Array.<LatLng>*/ paths) => $unsafe.setPaths(paths is List ? jsw.JsArray.jsify(paths) : paths);
+  @override StrokePosition get strokePosition => StrokePosition.find($unsafe.strokePosition);
 }

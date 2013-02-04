@@ -14,16 +14,17 @@
 
 part of google_maps;
 
-class StreetViewLocation extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new StreetViewLocation.fromJsProxy(jsProxy);
+abstract class _StreetViewLocation {
+  String description;
+  LatLng latLng;
+  String pano;
+}
+
+class StreetViewLocation extends jsw.TypedProxy implements _StreetViewLocation {
+  static StreetViewLocation cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StreetViewLocation.fromJsProxy(jsProxy));
 
   StreetViewLocation() : super();
   StreetViewLocation.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  String get description => $.description.value;
-  set description(String description) => $.description = description;
-  LatLng get latLng => $.latLng.map(LatLng.INSTANCIATOR).value;
-  set latLng(LatLng latLng) => $.latLng = latLng;
-  String get pano => $.pano.value;
-  set pano(String pano) => $.pano = pano;
+  @override LatLng get latLng => LatLng.cast($unsafe.latLng);
 }

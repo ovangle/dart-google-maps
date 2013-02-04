@@ -14,13 +14,30 @@
 
 part of google_maps;
 
+abstract class _ImageMapType {
+  // num getOpacity; // num get opacity;
+  // setOpacity(num opacity); // set opacity(num opacity);
+}
+
 // TODO extends MVCObject mixin MapType
-class ImageMapType extends MapType {
-  ImageMapType(ImageMapTypeOptions opts) : super.newInstance(maps.ImageMapType, [opts]);
+class ImageMapType extends MapType implements _ImageMapType {
+  static ImageMapType cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new ImageMapType.fromJsProxy(jsProxy));
+
+  ImageMapType(ImageMapTypeOptions opts) : super(maps.ImageMapType, [opts]);
   ImageMapType.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  num get opacity => $.getOpacity().value;
-  set opacity(num opacity) => $.setOpacity(opacity);
+  num get opacity => $unsafe.getOpacity();
+  set opacity(num opacity) => $unsafe.setOpacity(opacity);
 
   ImageMapTypeEvents get on => new ImageMapTypeEvents._(this);
+}
+
+class ImageMapTypeEvents {
+  static final TILESLOADED = "tilesloaded";
+
+  final ImageMapType _imageMapType;
+
+  ImageMapTypeEvents._(this._imageMapType);
+
+  NoArgsEventListenerAdder get tilesloaded => new NoArgsEventListenerAdder(_imageMapType, TILESLOADED);
 }

@@ -14,11 +14,18 @@
 
 part of google_maps;
 
-class FusionTablesQuery extends jsw.IsJsProxy {
-  set from(String from) => $.from = from;
-  set limit(num limit) => $.limit = limit;
-  set offset(num offset) => $.offset = offset;
-  set orderBy(String orderBy) => $.orderBy = orderBy;
-  set select(String select) => $.select = select;
-  set where(String where) => $.where = where;
+abstract class _FusionTablesQuery {
+  String from;
+  num limit;
+  num offset;
+  String orderBy;
+  String select;
+  String where;
+}
+
+class FusionTablesQuery extends jsw.TypedProxy implements _FusionTablesQuery {
+  static FusionTablesQuery cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new FusionTablesQuery.fromJsProxy(jsProxy));
+
+  FusionTablesQuery() : super();
+  FusionTablesQuery.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }

@@ -14,18 +14,37 @@
 
 part of google_maps;
 
-class TransitDetails extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new TransitDetails.fromJsProxy(jsProxy);
+abstract class _TransitDetails {
+  @jsw.dartified TransitStop arrival_stop;
+  @jsw.dartified Time arrival_time;
+  @jsw.dartified TransitStop departure_stop;
+  @jsw.dartified Time departure_time;
+  String headsign;
+  num headway;
+  TransitLine line;
+  @jsw.dartified num num_stops;
+}
+
+class TransitDetails extends jsw.TypedProxy implements _TransitDetails {
+  static TransitDetails cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new TransitDetails.fromJsProxy(jsProxy));
 
   TransitDetails() : super();
   TransitDetails.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  TransitStop get arrivalStop => $.arrival_stop.map(TransitStop.INSTANCIATOR).value;
-  Time get arrivalTime => $.arrival_time.map(Time.INSTANCIATOR).value;
-  TransitStop get departureStop => $.departure_stop.map(TransitStop.INSTANCIATOR).value;
-  Time get departureTime => $.departure_time.map(Time.INSTANCIATOR).value;
-  String get headsign => $.headsign.value;
-  num get headway => $.headway.value;
-  TransitLine get line => $.line.map(TransitLine.INSTANCIATOR).value;
-  num get numStops => $.num_stops.value;
+  @override TransitStop get arrival_stop => TransitStop.cast($unsafe.arrival_stop);
+  @override Time get arrival_time => Time.cast($unsafe.arrival_time);
+  @override TransitStop get departure_stop => TransitStop.cast($unsafe.departure_stop);
+  @override Time get departure_time => Time.cast($unsafe.departure_time);
+  @override TransitLine get line => TransitLine.cast($unsafe.line);
+
+  TransitStop get arrivalStop => arrival_stop;
+  set arrivalStop(TransitStop arrivalStop) => this.arrival_stop = arrivalStop;
+  Time get arrivalTime => arrival_time;
+  set arrivalTime(Time arrivalTime) => this.arrival_time = arrivalTime;
+  TransitStop get departureStop => departure_stop;
+  set departureStop(TransitStop departureStop) => this.departure_stop = departureStop;
+  Time get departureTime => departure_time;
+  set departureTime(Time departureTime) => this.departure_time = departureTime;
+  num get numStops => num_stops;
+  set numStops(num numStops) => this.num_stops = numStops;
 }

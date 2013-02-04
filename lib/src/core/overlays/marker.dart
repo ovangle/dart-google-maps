@@ -14,102 +14,41 @@
 
 part of google_maps;
 
-class Marker extends MVCObject {
+abstract class _Marker {
+  @jsw.dartified Animation getAnimation();
+  @jsw.dartified bool getClickable();
+  @jsw.dartified String getCursor();
+  @jsw.dartified bool getDraggable();
+  @jsw.dartified bool getFlat();
+  @jsw.dartified dynamic/*string|Icon|Symbol*/ getIcon();
+  @jsw.dartified dynamic/*Map|StreetViewPanorama*/ getMap();
+  @jsw.dartified LatLng getPosition();
+  @jsw.dartified dynamic/*string|Icon|Symbol*/ getShadow();
+  @jsw.dartified MarkerShape getShape();
+  @jsw.dartified String getTitle();
+  @jsw.dartified bool getVisible();
+  @jsw.dartified num getZIndex();
+  @jsw.dartified void setAnimation(Animation animation);
+  @jsw.dartified void setClickable(bool flag);
+  @jsw.dartified void setCursor(String cursor);
+  @jsw.dartified void setDraggable(bool flag);
+  @jsw.dartified void setFlat(bool flag);
+  @jsw.dartified void setIcon(dynamic/*string|Icon|Symbol*/ icon);
+  @jsw.dartified void setMap(dynamic/*Map|StreetViewPanorama*/ map);
+  @jsw.dartified void setOptions(MarkerOptions options);
+  @jsw.dartified void setPosition(LatLng latlng);
+  @jsw.dartified void setShadow(dynamic/*string|Icon|Symbol*/ shadow);
+  @jsw.dartified void setShape(MarkerShape shape);
+  @jsw.dartified void setTitle(String title);
+  @jsw.dartified void setVisible(bool visible);
+  @jsw.dartified void setZIndex(num zIndex);
+}
+
+class Marker extends MVCObject implements _Marker {
+  static Marker cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Marker.fromJsProxy(jsProxy));
   static final num MAX_ZINDEX = maps.Marker.MAX_ZINDEX;
   static bool isInstance(js.Proxy jsProxy) => js.instanceof(jsProxy, maps.Marker);
-
-  Marker([MarkerOptions opts]) : super.newInstance(maps.Marker, [opts]);
-  Marker.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
-
-  // js methods
-
-  Animation get animation => $.getAnimation().map(Animation.find).value;
-  bool get clickable => $.getClickable().value;
-  String get cursor => $.getCursor().value;
-  bool get draggable => $.getDraggable().value;
-  bool get flat => $.getFlat().value;
-  Object get icon {
-    final result = $.getIcon().value;
-    if (result == null) {
-      return result;
-    } else if (result is String) {
-      return result;
-    } else if (result is js.Proxy) {
-      final type = _isSymbolOrIcon(result);
-      if (type == "Symbol") {
-        return new Symbol.fromJsProxy(result);
-      } else if (type == "Icon") {
-        return new Icon.fromJsProxy(result);
-      }
-    }
-    throw new Exception("Unsupported result");
-  }
-  Object get map {
-    final result = $.getMap().value;
-    if (result == null) {
-      return result;
-    } else if (GMap.isInstance(result)) {
-      return new GMap.fromJsProxy(result);
-    } else if (StreetViewPanorama.isInstance(result)) {
-      return new StreetViewPanorama.fromJsProxy(result);
-    } else {
-      throw new Exception("Unsupported result");
-    }
-  }
-  LatLng get position => $.getPosition().map(LatLng.INSTANCIATOR).value;
-  Object get shadow {
-    final result = $.getShadow().value;
-    if (result == null) {
-      return result;
-    } else if (result is String) {
-      return result;
-    } else if (result is js.Proxy) {
-      final type = _isSymbolOrIcon(result);
-      if (type == "Symbol") {
-        return new Symbol.fromJsProxy(result);
-      } else if (type == "Icon") {
-        return new Icon.fromJsProxy(result);
-      }
-    }
-    throw new Exception("Unsupported result");
-  }
-  MarkerShape get shape => $.getShape().map(MarkerShape.INSTANCIATOR).value;
-  String get title => $.getTitle().value;
-  bool get visible => $.getVisible().value;
-  num get zIndex => $.getZIndex().value;
-  set animation(Animation animation) => $.setAnimation(animation);
-  set clickable(bool clickable) => $.setClickable(clickable);
-  set cursor(String cursor) => $.setCursor(cursor);
-  set draggable(bool draggable) => $.setDraggable(draggable);
-  set flat(bool flag) => $.setFlat(flag);
-  set icon(Object icon) {
-    if (icon == null || icon is String || icon is Icon || icon is Symbol) {
-      $.setIcon(icon);
-    } else {
-      throw new UnsupportedError("Parameter must be of type String, Icon or Symbol");
-    }
-  }
-  set map(Object map) {
-    if (map == null || map is GMap || map is StreetViewPanorama) {
-      $.setMap(map);
-    } else {
-      throw new UnsupportedError("Parameter must be of type GMap or StreetViewPanorama");
-    }
-  }
-  set options(MarkerOptions options) => $.setOptions(options);
-  set position(LatLng latlng) => $.setPosition(latlng);
-  set shadow(Object shadow) {
-    if (shadow == null || shadow is String || shadow is Icon || shadow is Symbol) {
-      $.setShadow(shadow);
-    } else {
-      throw new UnsupportedError("Parameter must be of type String, Icon or Symbol");
-    }
-  }
-  set title(String title) => $.setTitle(title);
-  set visible(bool visible) => $.setVisible(visible);
-  set zIndex(num zIndex) => $.setZIndex(zIndex);
-
-  String _isSymbolOrIcon(js.Proxy jsProxy) {
+  static String _isSymbolOrIcon(js.Proxy jsProxy) {
     try {
       final path = jsProxy.path;
       return "Symbol";
@@ -117,6 +56,77 @@ class Marker extends MVCObject {
       return "Icon";
     }
   }
+
+  Marker([MarkerOptions opts]) : super(maps.Marker, [opts]);
+  Marker.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override Animation getAnimation() => Animation.find($unsafe.getAnimation());
+  @override dynamic/*string|Icon|Symbol*/ getIcon() {
+    final result = $unsafe.getIcon();
+    if (result is String) {
+      return result;
+    } else if (result is js.Proxy) {
+      final type = _isSymbolOrIcon(result);
+      if (type == "Symbol") {
+        return Symbol.cast(result);
+      } else if (type == "Icon") {
+        return Icon.cast(result);
+      }
+    }
+    return result;
+  }
+  @override dynamic/*Map|StreetViewPanorama*/ getMap() {
+    final result = $unsafe.getMap();
+    if (GMap.isInstance(result)) {
+      return GMap.cast(result);
+    } else if (StreetViewPanorama.isInstance(result)) {
+      return StreetViewPanorama.cast(result);
+    }
+    return result;
+  }
+  @override LatLng getPosition() => LatLng.cast($unsafe.getPosition());
+  @override dynamic/*string|Icon|Symbol*/ getShadow() {
+    final result = $unsafe.getShadow();
+    if (result is String) {
+      return result;
+    } else if (result is js.Proxy) {
+      final type = _isSymbolOrIcon(result);
+      if (type == "Symbol") {
+        return Symbol.cast(result);
+      } else if (type == "Icon") {
+        return Icon.cast(result);
+      }
+    }
+    return result;
+  }
+  @override MarkerShape getShape() => MarkerShape.cast($unsafe.getShape());
+
+  Animation get animation => getAnimation();
+  bool get clickable => getClickable();
+  String get cursor => getCursor();
+  bool get draggable => getDraggable();
+  bool get flat => getFlat();
+  dynamic get icon => getIcon();
+  dynamic get map => getMap();
+  LatLng get position => getPosition();
+  dynamic get shadow => getShadow();
+  MarkerShape get shape => getShape();
+  String get title => getTitle();
+  bool get visible => getVisible();
+  num get zIndex => getZIndex();
+  set animation(Animation animation) => setAnimation(animation);
+  set clickable(bool clickable) => setClickable(clickable);
+  set cursor(String cursor) => setCursor(cursor);
+  set draggable(bool draggable) => setDraggable(draggable);
+  set flat(bool flag) => setFlat(flag);
+  set icon(dynamic icon) => setIcon(icon);
+  set map(dynamic map) => setMap(map);
+  set options(MarkerOptions options) => setOptions(options);
+  set position(LatLng latlng) => setPosition(latlng);
+  set shadow(dynamic shadow) => setShadow(shadow);
+  set title(String title) => setTitle(title);
+  set visible(bool visible) => setVisible(visible);
+  set zIndex(num zIndex) => setZIndex(zIndex);
 
   // js events
 

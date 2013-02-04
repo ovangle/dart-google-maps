@@ -14,15 +14,20 @@
 
 part of google_maps;
 
-class KmlFeatureData extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new KmlFeatureData.fromJsProxy(jsProxy);
+abstract class _KmlFeatureData {
+  KmlAuthor author;
+  String description;
+  String id;
+  String infoWindowHtml;
+  String name;
+  String snippet;
+}
 
+class KmlFeatureData extends jsw.TypedProxy implements _KmlFeatureData {
+  static KmlFeatureData cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new KmlFeatureData.fromJsProxy(jsProxy));
+
+  KmlFeatureData() : super();
   KmlFeatureData.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  KmlAuthor get author => $.author.map(KmlAuthor.INSTANCIATOR).value;
-  String get description => $.description.value;
-  String get id => $.id.value;
-  String get infoWindowHtml => $.infoWindowHtml.value;
-  String get name => $.name.value;
-  String get snippet => $.snippet.value;
+  @override KmlAuthor get author => KmlAuthor.cast($unsafe.author);
 }

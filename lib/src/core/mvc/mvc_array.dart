@@ -14,28 +14,40 @@
 
 part of google_maps;
 
-class MVCArray<E> extends MVCObject {
-  jsw.Transformater _transform;
+abstract class _MVCArray<E> {
+  void clear();
+  void forEach(void callback(E o, num index));
+  jsw.JsArray<E> getArray();
+  E getAt(num i);
+  // num getLength(); // num get length;
+  void insertAt(num i, E elem);
+  E pop();
+  num push(E elem);
+  E removeAt(num i);
+  void setAt(num i, E elem);
+}
 
-  MVCArray([List<E> array, jsw.Transformater transform]) : super.newInstance(maps.MVCArray, [array]) {
-    _transform = ?transform ? transform : ((e) => e);
+class MVCArray<E> extends MVCObject implements _MVCArray<E>{
+  static MVCArray cast(js.Proxy jsProxy, [jsw.Transformer instantiator]) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MVCArray.fromJsProxy(jsProxy, instantiator));
+  static bool isInstance(js.Proxy jsProxy) => js.instanceof(jsProxy, maps.MVCArray);
+
+  jsw.Transformer _transform;
+
+  MVCArray([List<E> array, E transform(e)]) : super(maps.MVCArray, [array]) {
+    _transform = transform != null ? transform : ((e) => e);
   }
-  MVCArray.fromJsProxy(js.Proxy jsProxy, [jsw.Transformater transform]) : super.fromJsProxy(jsProxy) {
-    _transform = ?transform ? transform : ((e) => e);
+  MVCArray.fromJsProxy(js.Proxy jsProxy, [E transform(e)]) : super.fromJsProxy(jsProxy) {
+    _transform = transform != null ? transform : ((e) => e);
   }
 
-  void clear() { $.clear(); }
-  void forEach(void callback(E o, num index)) {
-    $.forEach(new jsw.Callback.once((Option<Object> o, Option<num> index) => callback(o.map(_transform).value, index.value)));
+  @override void forEach(void callback(E o, num index)) {
+    $unsafe.forEach(new jsw.Callback.once((dynamic o, num index) => callback(jsw.transformIfNotNull(o, _transform), index)));
   }
-  List<E> getArray() => $.getArray().map((js.Proxy jsProxy) => new jsw.JsList<E>.fromJsProxy(jsProxy, _transform)).value;
-  E getAt(num i) => $.getAt(i).map(_transform).value;
-  num get length => $.getLength().value;
-  void insertAt(num i, E elem) { $.insertAt(i, elem); }
-  E pop() => $.pop().map(_transform).value;
-  num push(E elem) => $.push(elem).value;
-  E removeAt(num i) => $.removeAt(i).map(_transform).value;
-  void setAt(num i, E elem) { $.setAt(i, elem); }
+  @override jsw.JsArray<E> getArray() => jsw.JsArray.cast($unsafe.getArray(), _transform);
+  @override E getAt(num i) => jsw.transformIfNotNull($unsafe.getAt(i), _transform);
+  @override num get length => $unsafe.getLength();
+  @override E pop() => jsw.transformIfNotNull($unsafe.pop(), _transform);
+  @override E removeAt(num i) => jsw.transformIfNotNull($unsafe.removeAt(i), _transform);
 
   MVCArrayEvents<E> get on => new MVCArrayEvents<E>._(this);
 }
@@ -44,7 +56,7 @@ class MVCArrayEvents<E> {
   static final INSERT_AT = "insert_at";
   static final REMOVE_AT = "remove_at";
   static final SET_AT = "set_at";
-  
+
   final MVCArray<E> _mvcArray;
 
   MVCArrayEvents._(this._mvcArray);

@@ -14,24 +14,24 @@
 
 part of google_maps;
 
-class DistanceMatrixRequest extends jsw.IsJsProxy {
-  set avoidHighways(bool avoidHighways) => $.avoidHighways = avoidHighways;
-  set avoidTolls(bool avoidTolls) => $.avoidTolls = avoidTolls;
-  set destinations(Object destinations) {
-    if (destinations is List<String> || destinations is List<LatLng>) {
-      $.destinations = destinations;
-    } else {
-      throw new UnsupportedError("Parameter must be of type List<String> or List<LatLng>");
-    }
-  }
-  set origins(Object origins) {
-    if (origins is List<String> || origins is List<LatLng>) {
-      $.origins = origins;
-    } else {
-      throw new UnsupportedError("Parameter must be of type List<String> or List<LatLng>");
-    }
-  }
-  set region(String region) => $.region = region;
-  set travelMode(TravelMode travelMode) => $.travelMode = travelMode;
-  set unitSystem(UnitSystem unitSystem) => $.unitSystem = unitSystem;
+abstract class _DistanceMatrixRequest {
+  bool avoidHighways;
+  bool avoidTolls;
+  List/*Array.<LatLng>|Array.<string>*/ destinations;
+  List/*Array.<LatLng>|Array.<string>*/ origins;
+  String region;
+  TravelMode travelMode;
+  UnitSystem unitSystem;
+}
+
+class DistanceMatrixRequest extends jsw.TypedProxy implements _DistanceMatrixRequest {
+  static DistanceMatrixRequest cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new DistanceMatrixRequest.fromJsProxy(jsProxy));
+
+  DistanceMatrixRequest() : super();
+  DistanceMatrixRequest.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override List/*Array.<LatLng>|Array.<string>*/ get destinations => jsw.JsArray.cast($unsafe.destinations, (e) => LatLng.isInstance(e) ? LatLng.cast(e) : e);
+  @override List/*Array.<LatLng>|Array.<string>*/ get origins => jsw.JsArray.cast($unsafe.origins, (e) => LatLng.isInstance(e) ? LatLng.cast(e) : e);
+  @override TravelMode get travelMode => TravelMode.find($unsafe.travelMode);
+  @override UnitSystem get unitSystem => UnitSystem.find($unsafe.unitSystem);
 }

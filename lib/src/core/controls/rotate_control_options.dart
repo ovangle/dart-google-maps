@@ -14,6 +14,15 @@
 
 part of google_maps;
 
-class RotateControlOptions extends jsw.IsJsProxy {
-  set position(ControlPosition position) => $.position = position;
+abstract class _RotateControlOptions {
+  ControlPosition position;
+}
+
+class RotateControlOptions extends jsw.TypedProxy implements _RotateControlOptions {
+  static RotateControlOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new RotateControlOptions.fromJsProxy(jsProxy));
+
+  RotateControlOptions() : super();
+  RotateControlOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  ControlPosition get position => ControlPosition.find($unsafe.position);
 }

@@ -14,7 +14,19 @@
 
 part of google_maps;
 
-class TransitOptions extends jsw.IsJsProxy {
-  set arrivalTime(Date arrivalTime) => $.arrivalTime = arrivalTime;
-  set departureTime(Date departureTime) => $.departureTime = departureTime;
+abstract class _TransitOptions {
+  Date arrivalTime;
+  Date departureTime;
+}
+
+class TransitOptions extends jsw.TypedProxy implements _TransitOptions {
+  static TransitOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new TransitOptions.fromJsProxy(jsProxy));
+
+  TransitOptions() : super();
+  TransitOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override Date get arrivalTime => jsw.JsDate.cast($unsafe.arrivalTime);
+  @override set arrivalTime(Date arrivalTime) => $unsafe.arrivalTime = jsw.JsDate.jsify(arrivalTime);
+  @override Date get departureTime => jsw.JsDate.cast($unsafe.departureTime);
+  @override set departureTime(Date departureTime) => $unsafe.departureTime = jsw.JsDate.jsify(departureTime);
 }

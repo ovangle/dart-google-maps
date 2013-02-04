@@ -14,31 +14,36 @@
 
 part of google_maps;
 
-class Projection extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new Projection.fromJsProxy(jsProxy);
+abstract class _Projection {
+  Point fromLatLngToPoint(LatLng latLng, [Point point]);
+  LatLng fromPointToLatLng(Point pixel, [bool nowrap]);
+}
+
+class Projection extends jsw.TypedProxy implements _Projection {
+  static Projection cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Projection.fromJsProxy(jsProxy));
 
   Projection() : super();
   Projection.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
   void set_fromLatLngToPoint(Point fromLatLngToPoint(LatLng latLng, [Point point])) {
-    $.fromLatLngToPoint = new jsw.Callback.many((Option<js.Proxy> latLng, [Option<js.Proxy> point]) {
+    $unsafe.fromLatLngToPoint = new jsw.Callback.many((js.Proxy latLng, [js.Proxy point]) {
       if (?point) {
-        return fromLatLngToPoint(latLng.map((e) => new LatLng.fromJsProxy(e)).value, point.map((e) => new Point.fromJsProxy(e)).value);
+        return fromLatLngToPoint(LatLng.cast(latLng), Point.cast(point));
       } else {
-        return fromLatLngToPoint(latLng.map((e) => new LatLng.fromJsProxy(e)).value);
+        return fromLatLngToPoint(LatLng.cast(latLng));
       }
     });
   }
   void set_fromPointToLatLng(LatLng fromPointToLatLng(Point pixel, [bool nowrap])) {
-    $.fromPointToLatLng = new jsw.Callback.many((Option<js.Proxy> pixel, [Option<bool> nowrap]) {
+    $unsafe.fromPointToLatLng = new jsw.Callback.many((js.Proxy pixel, [bool nowrap]) {
       if (?nowrap) {
-        return fromPointToLatLng(pixel.map((e) => new Point.fromJsProxy(e)).value, nowrap.value);
+        return fromPointToLatLng(Point.cast(pixel), nowrap);
       } else {
-        return fromPointToLatLng(pixel.map((e) => new Point.fromJsProxy(e)).value);
+        return fromPointToLatLng(Point.cast(pixel));
       }
     });
   }
 
-  Point fromLatLngToPoint(LatLng latLng, [Point point]) => $.fromLatLngToPoint(latLng, point).map(Point.INSTANCIATOR).value;
-  LatLng fromPointToLatLng(Point pixel, [bool nowrap]) => $.fromPointToLatLng(pixel, nowrap).map(LatLng.INSTANCIATOR).value;
+  @override Point fromLatLngToPoint(LatLng latLng, [Point point]) => Point.cast($unsafe.fromLatLngToPoint(latLng, point));
+  @override LatLng fromPointToLatLng(Point pixel, [bool nowrap]) => LatLng.cast($unsafe.fromPointToLatLng(pixel, nowrap));
 }

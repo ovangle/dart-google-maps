@@ -14,28 +14,34 @@
 
 part of google_maps;
 
-class MVCObject extends jsw.IsJsProxy {
-  MVCObject() : super.newInstance(maps.MVCObject);
-  MVCObject.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
-  MVCObject.newInstance(objectName, [List args]) : super.newInstance(objectName, args);
+abstract class _MVCObject {
+  MapsEventListener addListener(String eventName, Function handler);
+  void bindTo(String key, MVCObject target, [String targetKey, bool noNotify]);
+  void changed(String key);
+  dynamic get(String key);
+  void notify(String key);
+  void set(String key, dynamic value);
+  void setValues(Map<String, dynamic> values);
+  void unbind(String key);
+  void unbindAll();
+}
 
-  MapsEventListener addListener(String eventName, Function handler) {
+class MVCObject extends jsw.TypedProxy implements _MVCObject {
+  static MVCObject cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MVCObject.fromJsProxy(jsProxy));
+
+  MVCObject([js.FunctionProxy function, List args]) : super(function != null ? function : maps.MVCObject, args);
+  MVCObject.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override MapsEventListener addListener(String eventName, Function handler) {
     final callback = new jsw.Callback.many(handler);
     final instanciator = (js.Proxy jsProxy) => new MapsEventListener.fromJsProxy(jsProxy, () => callback.dispose());
-    return $.addListener(eventName, callback).map(instanciator).value;
+    return $unsafe.addListener(eventName, callback).map(instanciator);
   }
-  void bindTo(String key, MVCObject target, [String targetKey, bool noNotify]) { $.bindTo(key, target, targetKey, noNotify); }
-  void changed(String key) { $.changed(key); }
-  Object get(String key) => $.get(key).value;
-  void notify(String key) { $.notify(key); }
-  void set(String key, Object value) { $.set(key, value); }
-  set values(Map<String, Object> values) {
-    final valuesJs = new jsw.IsJsProxy();
-    values.forEach((String key, Object value) {
-      $[key] = value;
+  @override void setValues(Map<String, dynamic> values) {
+    final valuesJs = new jsw.TypedProxy();
+    values.forEach((key, value) {
+      valuesJs[key] = value;
     });
-    $.setValues(valuesJs);
+    $unsafe.setValues(valuesJs);
   }
-  void unbind(String key) { $.unbind(key); }
-  void unbindAll() { $.unbindAll(); }
 }

@@ -14,18 +14,24 @@
 
 part of google_maps;
 
-class StreetViewTileData extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new StreetViewTileData.fromJsProxy(jsProxy);
+abstract class _StreetViewTileData {
+  String getTileUrl(String pano, num tileZoom, num tileX, num tileY);
+
+  num centerHeading;
+  Size tileSize;
+  Size worldSize;
+}
+
+class StreetViewTileData extends jsw.TypedProxy implements _StreetViewTileData {
+  static StreetViewTileData cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StreetViewTileData.fromJsProxy(jsProxy));
 
   StreetViewTileData() : super();
   StreetViewTileData.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  void set_getTileUrl(String getTileUrl(String pano, num tileZoom, num tileX, num tileY)) {
-    $.getTileUrl = new jsw.Callback.many((Option<String> pano, Option<num> tileZoom, Option<num> tileX, Option<num> tileY) => getTileUrl(pano.value, tileZoom.value, tileX.value, tileY.value));
-  }
-  String getTileUrl(String pano, num tileZoom, num tileX, num tileY) => $.getTileUrl(pano, tileZoom, tileX, tileY).value;
+  @override Size get tileSize => Size.cast($unsafe.tileSize);
+  @override Size get worldSize => Size.cast($unsafe.worldSize);
 
-  set centerHeading(num centerHeading) => $.centerHeading = centerHeading;
-  set tileSize(Size tileSize) => $.tileSize = tileSize;
-  set worldSize(Size worldSize) => $.worldSize = worldSize;
+  void set_getTileUrl(String getTileUrl(String pano, num tileZoom, num tileX, num tileY)) {
+    $unsafe.getTileUrl = new jsw.Callback.many(getTileUrl);
+  }
 }

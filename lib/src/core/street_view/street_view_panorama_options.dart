@@ -14,22 +14,40 @@
 
 part of google_maps;
 
-class StreetViewPanoramaOptions extends jsw.IsJsProxy {
-  set addressControl(bool addressControl) => $.addressControl = addressControl;
-  set addressControlOptions(StreetViewAddressControlOptions addressControlOptions) => $.addressControlOptions = addressControlOptions;
-  set clickToGo(bool clickToGo) => $.clickToGo = clickToGo;
-  set disableDoubleClickZoom(bool disableDoubleClickZoom) => $.disableDoubleClickZoom = disableDoubleClickZoom;
-  set enableCloseButton(bool enableCloseButton) => $.enableCloseButton = enableCloseButton;
-  set imageDateControl(bool imageDateControl) => $.imageDateControl = imageDateControl;
-  set linksControl(bool linksControl) => $.linksControl = linksControl;
-  set panControl(bool panControl) => $.panControl = panControl;
-  set panControlOptions(PanControlOptions panControlOptions) => $.panControlOptions = panControlOptions;
-  set pano(String pano) => $.pano = pano;
-  set panoProvider(StreetViewPanoramaData provider(String pano)) => $.panoProvider = new jsw.Callback.many((Option<String> pano) => provider(pano.value));
-  set position(LatLng position) => $.position = position;
-  set pov(StreetViewPov pov) => $.pov = pov;
-  set scrollwheel(bool scrollwheel) => $.scrollwheel = scrollwheel;
-  set visible(bool visible) => $.visible = visible;
-  set zoomControl(bool zoomControl) => $.zoomControl = zoomControl;
-  set zoomControlOptions(ZoomControlOptions zoomControlOptions) => $.zoomControlOptions = zoomControlOptions;
+typedef StreetViewPanoramaData PanoProvider(String pano);
+
+abstract class _StreetViewPanoramaOptions {
+  bool addressControl;
+  StreetViewAddressControlOptions addressControlOptions;
+  bool clickToGo;
+  bool disableDoubleClickZoom;
+  bool enableCloseButton;
+  bool imageDateControl;
+  bool linksControl;
+  bool panControl;
+  PanControlOptions panControlOptions;
+  String pano;
+  PanoProvider panoProvider;
+  LatLng position;
+  StreetViewPov pov;
+  bool scrollwheel;
+  bool visible;
+  bool zoomControl;
+  ZoomControlOptions zoomControlOptions;
+}
+
+class StreetViewPanoramaOptions extends jsw.TypedProxy implements _StreetViewPanoramaOptions {
+  static StreetViewPanoramaOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StreetViewPanoramaOptions.fromJsProxy(jsProxy));
+
+  StreetViewPanoramaOptions() : super();
+  StreetViewPanoramaOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override StreetViewAddressControlOptions get addressControlOptions => StreetViewAddressControlOptions.cast($unsafe.addressControlOptions);
+  @override PanControlOptions get panControlOptions => PanControlOptions.cast($unsafe.panControlOptions);
+  @override PanoProvider get panoProvider => (String pano) => $unsafe.provider(pano);
+  @override set panoProvider(PanoProvider panoProvider) => $unsafe.panoProvider = new jsw.Callback.many(panoProvider);
+  @override LatLng get position => LatLng.cast($unsafe.position);
+  @override StreetViewPov get pov => StreetViewPov.cast($unsafe.pov);
+  @override ZoomControlOptions get zoomControlOptions => ZoomControlOptions.cast($unsafe.zoomControlOptions);
+
 }

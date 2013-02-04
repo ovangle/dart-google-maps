@@ -14,11 +14,23 @@
 
 part of google_maps;
 
-class FusionTablesLayerOptions extends jsw.IsJsProxy {
-  set clickable(bool clickable) => $.clickable = clickable;
-  set heatmap(FusionTablesHeatmap heatmap) => $.heatmap = heatmap;
-  set map(GMap map) => $.map = map;
-  set query(FusionTablesQuery query) => $.query = query;
-  set styles(List<FusionTablesStyle> styles) => $.styles = styles;
-  set suppressInfoWindows(bool suppressInfoWindows) => $.suppressInfoWindows = suppressInfoWindows;
+abstract class _FusionTablesLayerOptions {
+  bool clickable;
+  FusionTablesHeatmap heatmap;
+  GMap map;
+  FusionTablesQuery query;
+  List<FusionTablesStyle> styles;
+  bool suppressInfoWindows;
+}
+
+class FusionTablesLayerOptions extends jsw.TypedProxy implements _FusionTablesLayerOptions {
+  static FusionTablesLayerOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new FusionTablesLayerOptions.fromJsProxy(jsProxy));
+
+  FusionTablesLayerOptions() : super();
+  FusionTablesLayerOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override FusionTablesHeatmap get heatmap => FusionTablesHeatmap.cast($unsafe.heatmap);
+  @override GMap get map => GMap.cast($unsafe.map);
+  @override FusionTablesQuery get query => FusionTablesQuery.cast($unsafe.query);
+  @override List<FusionTablesStyle> get styles => jsw.JsArray.cast($unsafe.styles, FusionTablesStyle.cast);
 }

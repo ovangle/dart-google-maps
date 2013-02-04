@@ -14,6 +14,13 @@
 
 part of google_maps;
 
-class FusionTablesHeatmap extends jsw.IsJsProxy {
-  set enabled(bool enabled) => $.enabled = enabled;
+abstract class _FusionTablesHeatmap {
+  bool enabled;
+}
+
+class FusionTablesHeatmap extends jsw.TypedProxy implements _FusionTablesHeatmap {
+  static FusionTablesHeatmap cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new FusionTablesHeatmap.fromJsProxy(jsProxy));
+
+  FusionTablesHeatmap() : super();
+  FusionTablesHeatmap.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }

@@ -14,27 +14,38 @@
 
 part of google_maps;
 
-class Polyline extends MVCObject {
+abstract class _Polyline {
+  @jsw.dartified bool getEditable();
+  @jsw.dartified GMap getMap();
+  @jsw.dartified MVCArray<LatLng> getPath();
+  @jsw.dartified bool getVisible();
+  @jsw.dartified void setEditable(bool editable);
+  @jsw.dartified void setMap(GMap map);
+  @jsw.dartified void setOptions(PolylineOptions options);
+  @jsw.dartified void setPath(dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ path);
+  @jsw.dartified void setVisible(bool visible);
+}
+
+class Polyline extends MVCObject implements _Polyline {
+  static Polyline cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Polyline.fromJsProxy(jsProxy));
   static bool isInstance(js.Proxy jsProxy) => js.instanceof(jsProxy, maps.Polyline);
 
-  Polyline([PolylineOptions opts]) : super.newInstance(maps.Polyline, [opts]);
+  Polyline([PolylineOptions opts]) : super(maps.Polyline, [opts]);
   Polyline.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  bool get editable=> $.getEditable().value;
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  MVCArray<LatLng> get path => $.getPath().map((js.Proxy jsProxy) => new MVCArray.fromJsProxy(jsProxy, (js.Proxy jsProxy) => new LatLng.fromJsProxy(jsProxy))).value;
-  bool get visible => $.getVisible().value;
-  set editable(bool editable) => $.setEditable(editable);
-  set map(GMap map) => $.setMap(map);
-  set options(PolylineOptions options) => $.setOptions(options);
-  set path(Object path) {
-    if (path is MVCArray<LatLng> || path is List<LatLng>) {
-      $.setPath(path);
-    } else {
-      throw new UnsupportedError("Parameter must be of type MVCArray<LatLng> or List<LatLng>");
-    }
-  }
-  set visible(bool visible) => $.setVisible(visible);
+  @override GMap getMap() => GMap.cast($unsafe.getMap());
+  @override MVCArray<LatLng> getPath() => MVCArray.cast($unsafe.getPath(), (e) => LatLng.cast(e));
+  @override void setPath(dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ path) => $unsafe.setPath(path is List ? jsw.JsArray.jsify(path) : path);
+
+  bool get editable => getEditable();
+  GMap get map => getMap();
+  MVCArray<LatLng> get path => getPath();
+  bool get visible => getVisible();
+  set editable(bool editable) => setEditable(editable);
+  set map(GMap map) => setMap(map);
+  set options(PolylineOptions options) => setOptions(options);
+  set path(dynamic/*MVCArray.<LatLng>|Array.<LatLng>*/ path) => setPath(path);
+  set visible(bool visible) => setVisible(visible);
 
   PolylineEvents get on => new PolylineEvents._(this);
 }
@@ -48,7 +59,7 @@ class PolylineEvents {
   static final MOUSEOVER = "mouseover";
   static final MOUSEUP = "mouseup";
   static final RIGHTCLICK = "rightclick";
-  
+
   final Polyline _polyline;
 
   PolylineEvents._(this._polyline);

@@ -14,10 +14,17 @@
 
 part of google_maps;
 
-class FusionTablesPolygonOptions extends jsw.IsJsProxy {
-  set fillColor(String fillColor) => $.fillColor = fillColor;
-  set fillOpacity(num fillOpacity) => $.fillOpacity = fillOpacity;
-  set strokeColor(String strokeColor) => $.strokeColor = strokeColor;
-  set strokeOpacity(num strokeOpacity) => $.strokeOpacity = strokeOpacity;
-  set strokeWeight(num strokeWeight) => $.strokeWeight = strokeWeight;
+abstract class _FusionTablesPolygonOptions {
+  String fillColor;
+  num fillOpacity;
+  String strokeColor;
+  num strokeOpacity;
+  num strokeWeight;
+}
+
+class FusionTablesPolygonOptions extends jsw.TypedProxy implements _FusionTablesPolygonOptions {
+  static FusionTablesPolygonOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new FusionTablesPolygonOptions.fromJsProxy(jsProxy));
+
+  FusionTablesPolygonOptions() : super();
+  FusionTablesPolygonOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 }

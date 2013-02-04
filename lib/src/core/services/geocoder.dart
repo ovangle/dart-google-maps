@@ -14,10 +14,17 @@
 
 part of google_maps;
 
-class Geocoder extends jsw.IsJsProxy {
-  Geocoder() : super.newInstance(maps.Geocoder);
+abstract class _Geocoder {
+  void geocode(GeocoderRequest request, void callback(List<GeocoderResult> results, GeocoderStatus status));
+}
 
-  void geocode(GeocoderRequest request, void callback(List<GeocoderResult> results, GeocoderStatus status)) {
-    $.geocode(request, new jsw.Callback.once((Option<js.Proxy> results, Option<js.Proxy> status) => callback(results.map((e) => new jsw.JsList<GeocoderResult>.fromJsProxy(e, (e) => new GeocoderResult.fromJsProxy(e))).value, status.map(GeocoderStatus.find).value)));
+class Geocoder extends jsw.TypedProxy implements _Geocoder {
+  static Geocoder cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Geocoder.fromJsProxy(jsProxy));
+
+  Geocoder() : super(maps.Geocoder);
+  Geocoder.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override void geocode(GeocoderRequest request, void callback(List<GeocoderResult> results, GeocoderStatus status)) {
+    $unsafe.geocode(request, new jsw.Callback.once((js.Proxy results, js.Proxy status) => callback(jsw.JsArray.cast(results, GeocoderResult.cast), GeocoderStatus.find(status))));
   }
 }

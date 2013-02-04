@@ -14,9 +14,19 @@
 
 part of google_maps;
 
-class GeocoderRequest extends jsw.IsJsProxy {
-  set address(String address) => $.address = address;
-  set bounds(LatLngBounds bounds) => $.bounds = bounds;
-  set location(LatLng location) => $.location = location;
-  set region(String region) => $.region = region;
+abstract class _GeocoderRequest {
+  String address;
+  LatLngBounds bounds;
+  LatLng location;
+  String region;
+}
+
+class GeocoderRequest extends jsw.TypedProxy implements _GeocoderRequest {
+  static GeocoderRequest cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new GeocoderRequest.fromJsProxy(jsProxy));
+
+  GeocoderRequest() : super();
+  GeocoderRequest.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override LatLngBounds get bounds => LatLngBounds.cast($unsafe.bounds);
+  @override LatLng get location => LatLng.cast($unsafe.location);
 }

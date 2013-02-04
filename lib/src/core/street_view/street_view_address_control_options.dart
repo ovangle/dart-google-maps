@@ -14,20 +14,15 @@
 
 part of google_maps;
 
-class StreetViewAddressControlOptions extends jsw.IsJsProxy {
-  set position(ControlPosition position) => $.position = position;
+abstract class _StreetViewAddressControlOptions {
+  ControlPosition position;
 }
 
-class StreetViewLink extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new StreetViewLink.fromJsProxy(jsProxy);
+class StreetViewAddressControlOptions extends jsw.TypedProxy implements _StreetViewAddressControlOptions {
+  static StreetViewAddressControlOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new StreetViewAddressControlOptions.fromJsProxy(jsProxy));
 
-  StreetViewLink() : super();
-  StreetViewLink.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+  StreetViewAddressControlOptions() : super();
+  StreetViewAddressControlOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  String get description => $.description.value;
-  set description(String description) => $.description = description;
-  num get heading => $.heading.value;
-  set heading(num heading) => $.heading = heading;
-  String get pano => $.pano.value;
-  set pano(String pano) => $.pano = pano;
+  @override ControlPosition get position => ControlPosition.find($unsafe.position);
 }

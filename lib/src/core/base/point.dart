@@ -14,17 +14,18 @@
 
 part of google_maps;
 
-class Point extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new Point.fromJsProxy(jsProxy);
+abstract class _Point {
+  num x;
+  num y;
+  bool equals(Point other);
+  String toString();
+}
 
-  Point(num x, num y) : super.newInstance(maps.Point, [x, y]);
+class Point extends jsw.TypedProxy implements _Point {
+  static Point cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Point.fromJsProxy(jsProxy));
+
+  Point(num x, num y) : super(maps.Point, [x, y]);
   Point.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  bool equals(Point other) => $.equals(other).value;
-  String toString() => $.noSuchMethod(new jsw.ProxyInvocationMirror.method("toString", [])).value;
-
-  num get x => $.x.value;
-  set x(num x) => $.x = x;
-  num get y => $.y.value;
-  set y(num y) => $.y = y;
+  @override String toString() => $unsafe.noSuchMethod(new jsw.ProxyInvocationMirror.method("toString", []));
 }

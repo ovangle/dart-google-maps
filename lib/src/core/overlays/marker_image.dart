@@ -14,19 +14,23 @@
 
 part of google_maps;
 
+abstract class _MarkerImage {
+  Point anchor;
+  Point origin;
+  Size scaledSize;
+  Size size;
+  String url;
+}
+
 @deprecated
-class MarkerImage extends jsw.IsJsProxy {
-  MarkerImage(String url, [Size size, Point origin, Point anchor, Size scaledSize]) : super.newInstance(maps.MarkerImage, [url, size, origin, anchor, scaledSize]);
+class MarkerImage extends jsw.TypedProxy implements _MarkerImage {
+  static MarkerImage cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MarkerImage.fromJsProxy(jsProxy));
+
+  MarkerImage(String url, [Size size, Point origin, Point anchor, Size scaledSize]) : super(maps.MarkerImage, [url, size, origin, anchor, scaledSize]);
   MarkerImage.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  Point get anchor => $.anchor.map(Point.INSTANCIATOR).value;
-  set anchor(Point anchor) => $.anchor = anchor;
-  Point get origin => $.origin.map(Point.INSTANCIATOR).value;
-  set origin(Point origin) => $.origin = origin;
-  Size get scaledSize => $.scaledSize.map(Size.INSTANCIATOR).value;
-  set scaledSize(Size scaledSize) => $.scaledSize = scaledSize;
-  Size get size => $.size.map(Size.INSTANCIATOR).value;
-  set size(Size size) => $.size = size;
-  String get url => $.url.value;
-  set url(String url) => $.url = url;
+  @override Point get anchor => Point.cast($unsafe.anchor);
+  @override Point get origin => Point.cast($unsafe.origin);
+  @override Size get scaledSize => Size.cast($unsafe.scaledSize);
+  @override Size get size => Size.cast($unsafe.size);
 }

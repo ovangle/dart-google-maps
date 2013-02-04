@@ -1,7 +1,7 @@
 import 'dart:html' hide Events;
 import 'dart:math';
 import 'package:js/js.dart' as js;
-import 'package:google_maps/js_wrap.dart' as jsw;
+import 'package:js_wrap/js_wrap.dart' as jsw;
 import 'package:google_maps/google_maps.dart';
 
 GMap map;
@@ -70,14 +70,14 @@ class HomeControl {
 
     // Setup the click event listener for Home:
     // simply set the map to the control's current home property.
-    jsw.retainAll([map]);
+    jsw.retain(map);
     event.addDomListener(goHomeUI, 'click', (e) {
       map.center = _home;
     });
 
     // Setup the click event listener for Set Home:
     // Set the control's home to the current Map center.
-    jsw.retainAll([map]);
+    jsw.retain(map);
     event.addDomListener(setHomeUI, 'click', (e) {
       jsw.release(_home);
       _home = jsw.retain(map.center);

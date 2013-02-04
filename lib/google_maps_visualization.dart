@@ -15,7 +15,6 @@
 library google_maps_visualization;
 
 import 'package:js/js.dart' as js;
-import 'js_wrap.dart' as jsw;
 import 'google_maps.dart';
 
 part 'src/library/visualization/heatmap_layer.dart';

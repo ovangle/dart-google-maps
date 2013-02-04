@@ -14,19 +14,37 @@
 
 part of google_maps;
 
-class DirectionsStep extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new DirectionsStep.fromJsProxy(jsProxy);
+abstract class _DirectionsStep {
+  Distance distance;
+  GDuration duration;
+  @jsw.dartified LatLng end_location;
+  String instructions;
+  List<LatLng> path;
+  @jsw.dartified LatLng start_location;
+  List<DirectionsStep> steps;
+  TransitDetails transit;
+  @jsw.dartified TravelMode travel_mode;
+}
+
+class DirectionsStep extends jsw.TypedProxy implements _DirectionsStep {
+  static DirectionsStep cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new DirectionsStep.fromJsProxy(jsProxy));
 
   DirectionsStep() : super();
   DirectionsStep.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  Distance get distance => $.distance.map(Distance.INSTANCIATOR).value;
-  GDuration get duration => $.duration.map(GDuration.INSTANCIATOR).value;
-  LatLng get endLocation => $.end_location.map(LatLng.INSTANCIATOR).value;
-  String get instructions => $.instructions.value;
-  List<LatLng> get path => $.path.map((js.Proxy jsProxy) => new jsw.JsList<LatLng>.fromJsProxy(jsProxy, LatLng.INSTANCIATOR)).value;
-  LatLng get startLocation => $.start_location.map(LatLng.INSTANCIATOR).value;
-  List<DirectionsStep> get steps => $.steps.map((js.Proxy jsProxy) => new jsw.JsList<DirectionsStep>.fromJsProxy(jsProxy, DirectionsStep.INSTANCIATOR)).value;
-  TransitDetails get transit => $.transit.map(TransitDetails.INSTANCIATOR).value;
-  TravelMode get travelMode => $.travel_mode.map(TravelMode.find).value;
+  @override Distance get distance => Distance.cast($unsafe.distance);
+  @override GDuration get duration => GDuration.cast($unsafe.duration);
+  @override LatLng get end_location => LatLng.cast($unsafe.end_location);
+  @override List<LatLng> get path => jsw.JsArray.cast($unsafe.path, LatLng.cast);
+  @override LatLng get start_location => LatLng.cast($unsafe.start_location);
+  @override List<DirectionsStep> get steps => jsw.JsArray.cast($unsafe.steps, DirectionsStep.cast);
+  @override TransitDetails get transit => TransitDetails.cast($unsafe.transit);
+  @override TravelMode get travel_mode => TravelMode.find($unsafe.travel_mode);
+
+  LatLng get endLocation => end_location;
+  set endLocation(LatLng endLocation) => this.end_location = endLocation;
+  LatLng get startLocation => start_location;
+  set startLocation(LatLng startLocation) => this.start_location = startLocation;
+  TravelMode get travelMode => travel_mode;
+  set travelMode(TravelMode travelMode) => this.travel_mode = travelMode;
 }

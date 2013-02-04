@@ -14,39 +14,70 @@
 
 part of google_maps;
 
-class MarkerOptions extends jsw.IsJsProxy {
-  set anchorPoint(Point anchorPoint) => $.anchorPoint = anchorPoint;
-  set animation(Animation animation) => $.animation = animation;
-  set clickable(bool clickable) => $.clickable = clickable;
-  set cursor(String cursor) => $.cursor = cursor;
-  set draggable(bool draggable) => $.draggable = draggable;
-  set flat(bool flat) => $.flat = flat;
-  set icon(Object icon) {
-    if (icon == null || icon is String || icon is Icon || icon is Symbol) {
-      $.icon = icon;
-    } else {
-      throw new UnsupportedError("Parameter must be of type String, Icon or Symbol");
+abstract class _MarkerOptions {
+  Point anchorPoint;
+  Animation animation;
+  bool clickable;
+  String cursor;
+  bool draggable;
+  bool flat;
+  dynamic/*string|Icon|Symbol*/ icon;
+  dynamic/*Map|StreetViewPanorama*/ map;
+  bool optimized;
+  LatLng position;
+  bool raiseOnDrag;
+  dynamic/*string|Icon|Symbol*/ shadow;
+  MarkerShape shape;
+  String title;
+  bool visible;
+  num zIndex;
+}
+
+class MarkerOptions extends jsw.TypedProxy implements _MarkerOptions {
+  static MarkerOptions cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MarkerOptions.fromJsProxy(jsProxy));
+
+  MarkerOptions() : super();
+  MarkerOptions.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  @override Point get anchorPoint => Point.cast($unsafe.anchorPoint);
+  @override Animation get animation => Animation.find($unsafe.animation);
+  @override dynamic/*string|Icon|Symbol*/ get icon {
+    final result = $unsafe.icon;
+    if (result is String) {
+      return result;
+    } else if (result is js.Proxy) {
+      final type = Marker._isSymbolOrIcon(result);
+      if (type == "Symbol") {
+        return new Symbol.fromJsProxy(result);
+      } else if (type == "Icon") {
+        return new Icon.fromJsProxy(result);
+      }
     }
+    return result;
   }
-  set map(Object map) {
-    if (map is GMap || map is StreetViewPanorama) {
-      $.map = map;
-    } else {
-      throw new UnsupportedError("Parameter must be of type GMap or StreetViewPanorama");
+  @override dynamic/*Map|StreetViewPanorama*/ get map {
+    final result = $unsafe.map;
+    if (GMap.isInstance(result)) {
+      return new GMap.fromJsProxy(result);
+    } else if (StreetViewPanorama.isInstance(result)) {
+      return new StreetViewPanorama.fromJsProxy(result);
     }
+    return result;
   }
-  set optimized(bool optimized) => $.optimized = optimized;
-  set position(LatLng position) => $.position = position;
-  set raiseOnDrag(bool raiseOnDrag) => $.raiseOnDrag = raiseOnDrag;
-  set shadow(Object shadow) {
-    if (shadow == null || shadow is String || shadow is Icon || shadow is Symbol) {
-      $.shadow = shadow;
-    } else {
-      throw new UnsupportedError("Parameter must be of type String, Icon or Symbol");
+  @override LatLng get position => LatLng.cast($unsafe.position);
+  @override dynamic/*string|Icon|Symbol*/ get shadow {
+    final result = $unsafe.shadow;
+    if (result is String) {
+      return result;
+    } else if (result is js.Proxy) {
+      final type = Marker._isSymbolOrIcon(result);
+      if (type == "Symbol") {
+        return new Symbol.fromJsProxy(result);
+      } else if (type == "Icon") {
+        return new Icon.fromJsProxy(result);
+      }
     }
+    return result;
   }
-  set shape(MarkerShape shape) => $.shape = shape;
-  set title(String title) => $.title = title;
-  set visible(bool visible) => $.visible = visible;
-  set zIndex(num zIndex) => $.zIndex = zIndex;
+  @override MarkerShape get shape => MarkerShape.cast($unsafe.shape);
 }

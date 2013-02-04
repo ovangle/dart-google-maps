@@ -14,11 +14,16 @@
 
 part of google_maps;
 
-class DistanceMatrixResponseRow extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new DistanceMatrixResponseRow.fromJsProxy(jsProxy);
+abstract class _DistanceMatrixResponseRow {
+  List<DistanceMatrixResponseElement> elements;
+}
+
+class DistanceMatrixResponseRow extends jsw.TypedProxy implements _DistanceMatrixResponseRow {
+  static DistanceMatrixResponseRow cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new DistanceMatrixResponseRow.fromJsProxy(jsProxy));
 
   DistanceMatrixResponseRow() : super();
   DistanceMatrixResponseRow.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  List<DistanceMatrixResponseElement> get elements => $.elements.map((js.Proxy jsProxy) => new jsw.JsList<DistanceMatrixResponseElement>.fromJsProxy(jsProxy, DistanceMatrixResponseElement.INSTANCIATOR)).value;
+  @override List<DistanceMatrixResponseElement> get elements => jsw.JsArray.cast($unsafe.elements, DistanceMatrixResponseElement.cast);
+  @override set elements(List elements) => $unsafe.elements = jsw.JsArray.jsify(elements);
 }

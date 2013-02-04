@@ -14,8 +14,19 @@
 
 part of google_maps;
 
-class MapTypeStyle extends jsw.IsJsProxy {
-  set elementType(MapTypeStyleElementType elementType) => $.elementType = elementType.value;
-  set featureType(MapTypeStyleFeatureType featureType) => $.featureType = featureType.value;
-  set stylers(List<MapTypeStyler> stylers) => $.stylers = stylers;
+abstract class _MapTypeStyle {
+  MapTypeStyleElementType elementType;
+  MapTypeStyleFeatureType featureType;
+  List<MapTypeStyler> stylers;
+}
+
+class MapTypeStyle extends jsw.TypedProxy implements _MapTypeStyle {
+  static MapTypeStyle cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MapTypeStyle.fromJsProxy(jsProxy));
+
+  MapTypeStyle() : super();
+  MapTypeStyle.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
+
+  MapTypeStyleElementType get elementType => MapTypeStyleElementType.find($unsafe.elementType);
+  MapTypeStyleFeatureType get featureType => MapTypeStyleFeatureType.find($unsafe.featureType);
+  List<MapTypeStyler> get stylers => jsw.JsArray.cast($unsafe.stylers, (e) => MapTypeStyler.cast(e));
 }

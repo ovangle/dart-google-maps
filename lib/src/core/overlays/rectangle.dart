@@ -14,21 +14,37 @@
 
 part of google_maps;
 
-class Rectangle extends MVCObject {
+abstract class _Rectangle {
+  @jsw.dartified LatLngBounds getBounds();
+  @jsw.dartified bool getEditable();
+  @jsw.dartified GMap getMap();
+  @jsw.dartified bool getVisible();
+  @jsw.dartified void setBounds(LatLngBounds bounds);
+  @jsw.dartified void setEditable(bool editable);
+  @jsw.dartified void setMap(GMap map);
+  @jsw.dartified void setOptions(RectangleOptions options);
+  @jsw.dartified void setVisible(bool visible);
+}
+
+class Rectangle extends MVCObject implements _Rectangle {
+  static Rectangle cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new Rectangle.fromJsProxy(jsProxy));
   static bool isInstance(js.Proxy jsProxy) => js.instanceof(jsProxy, maps.Rectangle);
 
-  Rectangle([RectangleOptions opts]) : super.newInstance(maps.Rectangle, [opts]);
+  Rectangle([RectangleOptions opts]) : super(maps.Rectangle, [opts]);
   Rectangle.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  LatLngBounds get bounds => $.getBounds().map(LatLngBounds.INSTANCIATOR).value;
-  bool get editable => $.getEditable().value;
-  GMap get map => $.getMap().map(GMap.INSTANCIATOR).value;
-  bool get visible => $.getVisible().value;
-  set bounds(LatLngBounds bounds) => $.setBounds(bounds);
-  set editable(bool editable) => $.setEditable(editable);
-  set map(GMap map) => $.setMap(map);
-  set options(RectangleOptions options) => $.setOptions(options);
-  set visible(bool visible) => $.setVisible(visible);
+  @override LatLngBounds getBounds() => LatLngBounds.cast($unsafe.getBounds());
+  @override GMap getMap() => GMap.cast($unsafe.getMap());
+
+  LatLngBounds get bounds => getBounds();
+  bool get editable => getEditable();
+  GMap get map => getMap();
+  bool get visible => getVisible();
+  set bounds(LatLngBounds bounds) => setBounds(bounds);
+  set editable(bool editable) => setEditable(editable);
+  set map(GMap map) => setMap(map);
+  set options(RectangleOptions options) => setOptions(options);
+  set visible(bool visible) => setVisible(visible);
 
   RectangleEvents get on => new RectangleEvents._(this);
 }
@@ -43,7 +59,7 @@ class RectangleEvents {
   static final MOUSEOVER = "mouseover";
   static final MOUSEUP = "mouseup";
   static final RIGHTCLICK = "rightclick";
-  
+
   final Rectangle _rectangle;
 
   RectangleEvents._(this._rectangle);

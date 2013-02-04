@@ -14,12 +14,16 @@
 
 part of google_maps;
 
-class MaxZoomResult extends jsw.IsJsProxy {
-  static final INSTANCIATOR = (js.Proxy jsProxy) => new MaxZoomResult.fromJsProxy(jsProxy);
+abstract class _MaxZoomResult {
+  MaxZoomStatus status;
+  num zoom;
+}
+
+class MaxZoomResult extends jsw.TypedProxy implements _MaxZoomResult {
+  static MaxZoomResult cast(js.Proxy jsProxy) => jsw.transformIfNotNull(jsProxy, (jsProxy) => new MaxZoomResult.fromJsProxy(jsProxy));
 
   MaxZoomResult() : super();
   MaxZoomResult.fromJsProxy(js.Proxy jsProxy) : super.fromJsProxy(jsProxy);
 
-  MaxZoomStatus get status => $.status.map(MaxZoomStatus.find).value;
-  num get zoom => $.zoom.value;
+  @override MaxZoomStatus get status => MaxZoomStatus.find($unsafe.status);
 }
