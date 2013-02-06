@@ -18,7 +18,7 @@ import 'package:meta/meta.dart';
 import 'package:js/js.dart' as js;
 import 'optional.dart';
 import 'dart:collection';
-import 'dart:collection-dev';
+//import 'dart:collection-dev';
 
 class ProxyInvocationMirror extends InvocationMirror {
   final String memberName;
@@ -143,7 +143,7 @@ class _JsIterator<E> implements Iterator<E> {
 
 class JsList<E> extends IsJsProxy implements List<E> {
   Transformater _instantiator;
-
+  List<E> get reversed => _asList().reversed;
   JsList.fromJsProxy(js.Proxy proxy, [E instantiator(e)]) : super.fromJsProxy(proxy) {
     _instantiator = instantiator != null ? instantiator : (e) => e;
   }
@@ -283,8 +283,10 @@ class JsList<E> extends IsJsProxy implements List<E> {
    * multiple times over the the returned [Iterable] will invoke the supplied
    * function [f] multiple times on the same element.
    */
-  Iterable mappedBy(f(E element)) => new MappedIterable<E, dynamic>(this, f);
-
+  Iterable mappedBy(f(E element)) => IterableMixinWorkaround.mappedByList(this, f);
+  
+ 
+  Iterable map(f(E element)) => IterableMixinWorkaround.mappedByList(this, f);
   /**
     * Returns a lazy [Iterable] with all elements that satisfy the
     * predicate [f].
@@ -295,7 +297,7 @@ class JsList<E> extends IsJsProxy implements List<E> {
     * multiple times over the the returned [Iterable] will invoke the supplied
     * function [f] multiple times on the same element.
     */
-  Iterable<E> where(bool f(E element)) => new WhereIterable<E>(this, f);
+  Iterable<E> where(bool f(E element)) => IterableMixinWorkaround.where(this, f);
 
   /**
    * Check whether the collection contains an element equal to [element].
@@ -331,6 +333,7 @@ class JsList<E> extends IsJsProxy implements List<E> {
     return value;
   }
 
+  
   /**
    * Returns true if every elements of this collection satisify the
    * predicate [f]. Returns false otherwise.
@@ -392,17 +395,7 @@ class JsList<E> extends IsJsProxy implements List<E> {
    * The [compare] function must be a proper [Comparator<T>]. If a function is
    * not provided, [compare] defaults to [Comparable.compare].
    */
-  E min([int compare(E a, E b)]) {
-    if (compare == null) compare = Comparable.compare;
-    Iterator it = iterator;
-    if (!it.moveNext()) return null;
-    E min = it.current;
-    while (it.moveNext()) {
-      E current = it.current;
-      if (compare(min, current) > 0) min = current;
-    }
-    return min;
-  }
+  E min([int compare(E a, E b)]) => IterableMixinWorkaround.min(this, compare);
 
   /**
    * Find the largest element in the iterable.
@@ -415,17 +408,7 @@ class JsList<E> extends IsJsProxy implements List<E> {
    * The [compare] function must be a proper [Comparator<T>]. If a function is
    * not provided, [compare] defaults to [Comparable.compare].
    */
-  E max([int compare(E a, E b)]) {
-    if (compare == null) compare = Comparable.compare;
-    Iterator it = iterator;
-    if (!it.moveNext()) return null;
-    E max = it.current;
-    while (it.moveNext()) {
-      E current = it.current;
-      if (compare(max, current) < 0) max = current;
-    }
-    return max;
-  }
+  E max([int compare(E a, E b)]) => IterableMixinWorkaround.max(this, compare);
 
   /**
    * Returns true if there is no element in this collection.
@@ -438,9 +421,7 @@ class JsList<E> extends IsJsProxy implements List<E> {
    * The returned [Iterable] may contain fewer than [n] elements, if [this]
    * contains fewer than [n] elements.
    */
-  Iterable<E> take(int n) {
-    return new TakeIterable<E>(this, n);
-  }
+  Iterable<E> take(int n) => IterableMixinWorkaround.takeList(this, n);
 
   /**
    * Returns an [Iterable] that stops once [test] is not satisfied anymore.
@@ -451,9 +432,7 @@ class JsList<E> extends IsJsProxy implements List<E> {
    * it discards [:e:] and moves into the finished state. That is, it will not
    * ask or provide any more elements.
    */
-  Iterable<E> takeWhile(bool test(E value)) {
-    return new TakeWhileIterable<E>(this, test);
-  }
+  Iterable<E> takeWhile(bool test(E value)) => IterableMixinWorkaround.takeWhile(this, test);
 
   /**
    * Returns an [Iterable] that skips the first [n] elements.
@@ -461,9 +440,7 @@ class JsList<E> extends IsJsProxy implements List<E> {
    * If [this] has fewer than [n] elements, then the resulting [Iterable] will
    * be empty.
    */
-  Iterable<E> skip(int n) {
-    return new SkipIterable<E>(this, n);
-  }
+  Iterable<E> skip(int n) => IterableMixinWorkaround.skipList(this, n);
 
   /**
    * Returns an [Iterable] that skips elements while [test] is satisfied.
@@ -474,9 +451,7 @@ class JsList<E> extends IsJsProxy implements List<E> {
    * discarded. Once an element satisfies the [test] the iterator stops testing
    * and uses every element unconditionally.
    */
-  Iterable<E> skipWhile(bool test(E value)) {
-    return new SkipWhileIterable<E>(this, test);
-  }
+  Iterable<E> skipWhile(bool test(E value)) => IterableMixinWorkaround.skipWhile(this, test);
 
   /**
    * Returns the first element.
